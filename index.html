@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Retirement Planning Guide — Time Is Your Only Edge</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a18;
+  --paper: #f5f2ec;
+  --cream: #ede9e0;
+  --gold: #c8922a;
+  --gold-light: #e8b84b;
+  --rust: #b85c38;
+  --forest: #2d5a3d;
+  --steel: #4a5568;
+  --muted: #8a8578;
+  --warn: #c0392b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 48px;
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 40%, rgba(200,146,42,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(45,90,61,0.15) 0%, transparent 50%);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(42px, 5vw, 72px);
+  line-height: 1.05;
+  color: var(--paper);
+  margin-bottom: 32px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.hero-sub {
+  font-size: 18px;
+  color: rgba(245,242,236,.65);
+  font-weight: 300;
+  max-width: 480px;
+  margin-bottom: 48px;
+  line-height: 1.8;
+}
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  padding: 14px 32px;
+  background: var(--gold);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: .02em;
+  transition: all .2s;
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+.btn-ghost {
+  padding: 14px 32px;
+  border: 1px solid rgba(245,242,236,.3);
+  color: var(--paper);
+  font-size: 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: .02em;
+  transition: all .2s;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.stat-card {
+  background: rgba(245,242,236,.05);
+  border: 1px solid rgba(245,242,236,.1);
+  border-radius: 8px;
+  padding: 24px 28px;
+  backdrop-filter: blur(10px);
+  animation: fadeUp .6s ease both;
+}
+.stat-card:nth-child(1) { animation-delay: .1s; }
+.stat-card:nth-child(2) { animation-delay: .2s; }
+.stat-card:nth-child(3) { animation-delay: .3s; }
+.stat-num { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--gold-light); line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; color: rgba(245,242,236,.6); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTIONS ── */
+.section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 96px 48px;
+}
+.section-wide {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 48px;
+}
+.section-dark {
+  background: var(--ink);
+  color: var(--paper);
+}
+.section-cream { background: var(--cream); }
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.15;
+  margin-bottom: 28px;
+  color: inherit;
+}
+h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  margin-bottom: 12px;
+  color: inherit;
+}
+.lead {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--steel);
+  margin-bottom: 32px;
+}
+.section-dark .lead { color: rgba(245,242,236,.7); }
+p { margin-bottom: 20px; color: var(--steel); font-size: 16px; }
+.section-dark p { color: rgba(245,242,236,.7); }
+
+/* Pull quote */
+.pull-quote {
+  border-left: 4px solid var(--gold);
+  margin: 48px 0;
+  padding: 24px 36px;
+  background: rgba(200,146,42,.06);
+  border-radius: 0 8px 8px 0;
+}
+.pull-quote blockquote {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.section-dark .pull-quote { background: rgba(200,146,42,.08); }
+.section-dark .pull-quote blockquote { color: var(--paper); }
+.pull-quote cite { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); font-style: normal; }
+
+/* Card grids */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 32px;
+  border: 1px solid rgba(0,0,0,.07);
+  transition: transform .2s, box-shadow .2s;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.1); }
+.section-dark .card { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.1); }
+.card-icon { font-size: 28px; margin-bottom: 16px; }
+.card h3 { font-size: 18px; margin-bottom: 10px; }
+.card p { font-size: 14px; margin: 0; }
+
+/* Warning cards */
+.warn-card {
+  background: rgba(192,57,43,.05);
+  border: 1px solid rgba(192,57,43,.2);
+  border-radius: 8px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+.warn-card .whead {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--warn);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.warn-card p { font-size: 14px; margin: 0; color: var(--steel); }
+
+/* DCA section */
+.dca-visual {
+  background: var(--ink);
+  border-radius: 12px;
+  padding: 40px;
+  margin: 48px 0;
+  position: relative;
+  overflow: hidden;
+}
+.dca-visual::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(200,146,42,.08);
+}
+.dca-visual h3 { color: var(--gold-light); font-size: 22px; margin-bottom: 16px; }
+.dca-visual p  { color: rgba(245,242,236,.7); font-size: 15px; }
+
+.dca-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+.dca-col { background: rgba(255,255,255,.05); border-radius: 8px; padding: 24px; }
+.dca-col h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+.dca-col.bad h4  { color: #e74c3c; }
+.dca-col.good h4 { color: var(--gold-light); }
+.dca-col p { font-size: 13px; color: rgba(245,242,236,.6); margin: 0; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 40px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--gold); opacity: .3; }
+.tl-item { position: relative; margin-bottom: 48px; }
+.tl-dot { position: absolute; left: -40px; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--gold); border: 3px solid var(--paper); }
+.tl-age { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.tl-item h3 { font-size: 18px; margin-bottom: 8px; }
+.tl-item p  { font-size: 14px; margin: 0; }
+
+/* Macro risks */
+.macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 40px; }
+.macro-card { border-radius: 8px; padding: 28px; border-left: 4px solid; }
+.macro-card.red    { background: rgba(192,57,43,.06);   border-color: var(--warn); }
+.macro-card.amber  { background: rgba(200,146,42,.07);  border-color: var(--gold); }
+.macro-card.forest { background: rgba(45,90,61,.07);    border-color: var(--forest); }
+.macro-card.steel  { background: rgba(74,85,104,.07);   border-color: var(--steel); }
+.macro-card h3 { font-size: 16px; margin-bottom: 8px; }
+.macro-card p  { font-size: 13px; margin: 0; }
+
+/* Nav */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 16px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(26,26,24,.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(200,146,42,.15);
+}
+.nav-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  color: var(--gold-light);
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 32px; }
+.nav-links a { font-size: 13px; color: rgba(245,242,236,.6); text-decoration: none; letter-spacing: .04em; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+
+/* Footer */
+footer {
+  background: var(--ink);
+  border-top: 1px solid rgba(200,146,42,.15);
+  padding: 48px;
+  text-align: center;
+}
+footer p { font-size: 13px; color: rgba(245,242,236,.4); margin: 0; }
+footer a { color: var(--gold); text-decoration: none; }
+
+.divider {
+  width: 60px;
+  height: 3px;
+  background: var(--gold);
+  margin: 0 0 40px;
+}
+
+@media(max-width:768px) {
+  .hero-grid, .card-grid, .dca-comparison, .macro-grid, .card-grid-2 { grid-template-columns: 1fr; gap: 20px; }
+  .hero, .section, .section-wide { padding: 60px 24px; }
+  .topnav { padding: 14px 24px; }
+  .nav-links { gap: 20px; }
+  .hero { min-height: auto; padding-top: 100px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="index.html" class="nav-brand">RetireSmart</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="guide.html">User Guide</a>
+    <a href="retirement_dashboard.html">Dashboard →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">A guide to long-term financial freedom</div>
+      <h1>Your time in the market<br>is your only <em>real</em> edge.</h1>
+      <p class="hero-sub">Retirement planning is not investing. It is the single most consequential financial decision of your life — and most people realize it twenty years too late.</p>
+      <div class="hero-cta">
+        <a href="retirement_dashboard.html" class="btn-primary">Open the Dashboard</a>
+        <a href="guide.html" class="btn-ghost">Read the Guide</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card">
+        <div class="stat-num">$1</div>
+        <div class="stat-label">invested at age 25 is worth $21 at age 65 (7% annual return). The same dollar invested at 45 is worth only $4.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">64%</div>
+        <div class="stat-label">of Americans are unprepared for retirement. Most cite "I'll start saving later" as their plan.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">40yr</div>
+        <div class="stat-label">is the difference between financial freedom and financial dependence. It is won or lost in your 20s and 30s — not your 50s.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY THIS IS DIFFERENT -->
+<section class="section">
+  <div class="eyebrow">The fundamental distinction</div>
+  <h2>Retirement planning is not investing.<br>They are entirely different disciplines.</h2>
+  <div class="divider"></div>
+  <p class="lead">Most people who consider themselves investors are still not retirement planners. The confusion between the two is one of the most expensive mistakes a person can make.</p>
+  <p>Investing is about generating returns. You pick assets, manage risk, try to beat a benchmark. You can afford to be wrong sometimes. You can recover from losses. Your time horizon is elastic.</p>
+  <p>Retirement planning is about <em>survival</em>. You are modeling a 30-to-40 year drawdown period with no margin for catastrophic error. You have fixed income floors (Social Security, pension), fixed obligations (mortgage, healthcare), and an unpredictable lifespan. The goal is not to maximize return — it is to <strong>never run out of money while maintaining your quality of life.</strong></p>
+
+  <div class="pull-quote">
+    <blockquote>"The investor's chief problem — and even his worst enemy — is likely to be himself."</blockquote>
+    <cite>— Benjamin Graham, The Intelligent Investor</cite>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <h3>Investing</h3>
+      <p>Maximize return. Tolerate volatility. Time horizon is flexible. Losses are recoverable. Emotional decisions are a cost, not a catastrophe.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏛️</div>
+      <h3>Retirement Planning</h3>
+      <p>Model a 30–40 year drawdown. Survive volatility. Time horizon is fixed. A bad sequence of returns in year 1 can permanently impair the plan. Decisions must be systematic, not emotional.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚠️</div>
+      <h3>The Confusion</h3>
+      <p>People who are good investors often believe their skills transfer directly to retirement planning. They often don't. The disciplines overlap but the stakes, the mechanics, and the failure modes are fundamentally different.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DCA SECTION -->
+<div class="section-dark">
+<section class="section">
+  <div class="eyebrow">The most powerful force in personal finance</div>
+  <h2>Even God cannot beat<br>dollar cost averaging.</h2>
+  <div class="divider"></div>
+  <p class="lead" style="color:rgba(245,242,236,.75)">In 2011, Ben Carlson of Ritholtz Wealth Management posed a thought experiment that shook the investing world. What if you had perfect foresight — if you could invest only at market peaks, every single time, for 40 years? You would still lose to someone who invested consistently, automatically, every month, regardless of conditions.</p>
+
+  <div class="dca-visual">
+    <h3>The Thought Experiment</h3>
+    <p>Imagine two investors from 1970 to 2010. One has perfect information — they only invest right before every major crash (1973, 1987, 2000, 2007). The other invests $200/month automatically, no matter what.</p>
+    <div class="dca-comparison">
+      <div class="dca-col bad">
+        <h4>❌ The Perfect Market Timer</h4>
+        <p>Invests $184,000 total — but only at the worst possible moments. Watches portfolio crash repeatedly. Emotional stress is immense. Yet still ends up with substantial wealth because the market recovered every time.</p>
+      </div>
+      <div class="dca-col good">
+        <h4>✅ The Automatic Investor (DCA)</h4>
+        <p>Invests $200/month for 40 years = $96,000 total. Never checks the market. Never tries to time anything. Ends up with <em>more money</em> than the perfect timer — and experienced a fraction of the stress.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <blockquote>"Time in the market beats timing the market — not occasionally, not usually, but almost always, over periods that matter for retirement."</blockquote>
+    <cite>— Paraphrased from decades of empirical market research</cite>
+  </div>
+
+  <p>For retirement planning, this principle is not just useful — it is foundational. You are not trying to be clever. You are trying to participate consistently in the long-run growth of the human economy. That growth has never failed to reward patience over any 20-year period in modern history.</p>
+  <p>The implication is radical: your 401K contributions made during the 2008 crash, the 2020 crash, and any future crash are not mistakes. They are the most valuable investments you will ever make. Every share you buy at depressed prices will multiply as the economy recovers — because it always has.</p>
+</section>
+</div>
+
+<!-- TIME SECTION -->
+<section class="section-cream">
+<div class="section">
+  <div class="eyebrow">The arithmetic of compounding</div>
+  <h2>The earlier you start,<br>the less you have to do.</h2>
+  <div class="divider" style="background:var(--gold)"></div>
+  <p class="lead">Compounding is not a metaphor. It is literal exponential mathematics — and it is merciless about timing.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-age">Age 25</div>
+      <h3>$500/month → $2.6 million by 65</h3>
+      <p>40 years of $500/month at 7% return. Total contributed: $240,000. Growth: $2,360,000. The market did 90% of the work.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-age">Age 35</div>
+      <h3>$500/month → $1.2 million by 65</h3>
+      <p>Same amount, 10 years later. You saved the same $500/month but ended up with less than half. Those 10 years of compounding cannot be bought back at any price.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-age">Age 45</div>
+      <h3>$500/month → $530,000 by 65</h3>
+      <p>Still valuable, but now you are racing against time. To match the 25-year-old's outcome, you would need to save nearly $3,000/month — six times as much. Late starts are expensive.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-age">Age 55</div>
+      <h3>$500/month → $210,000 by 65</h3>
+      <p>The window is nearly closed. This is why retirement planning cannot be deferred. Every year of delay changes the outcome by multiples, not percentages.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- HELPING OTHERS -->
+<section class="section">
+  <div class="eyebrow">The gift of financial wisdom</div>
+  <h2>How you can transform<br>someone else's retirement.</h2>
+  <div class="divider"></div>
+  <p class="lead">If you have reached a point of financial security, one of the most powerful things you can do is share the knowledge and tools that got you there. Not money — knowledge.</p>
+  <p>Most people in their 50s and 60s who are struggling financially are not there because they were irresponsible. They are there because nobody taught them the mechanics of compounding, the discipline of DCA, the danger of timing the market, or the difference between investing for returns and planning for survival.</p>
+  <p>A 30-year-old who understands these principles and acts on them will retire with an order of magnitude more wealth than one who learns them at 50 — even if their incomes are identical. The knowledge is the edge, not the income.</p>
+
+  <div class="card-grid card-grid-2">
+    <div class="card">
+      <div class="card-icon">👨‍👩‍👧‍👦</div>
+      <h3>Share this with your children early</h3>
+      <p>A 22-year-old who starts a $200/month Roth IRA will retire with over $1.1 million in tax-free wealth — from contributions that probably felt trivial at the time. Give them the dashboard and walk through the numbers together.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>Share it with colleagues and friends</h3>
+      <p>High-income professionals often have surprisingly weak retirement plans. Good salary, high lifestyle costs, insufficient savings rate. Use this tool to show the gap between what they have and what they need — concretely, in their own numbers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MACRO RISKS -->
+<div class="section-dark">
+<section class="section-wide">
+  <div class="eyebrow">What most retirement plans ignore</div>
+  <h2>The risks that quietly<br>destroy wealth over decades.</h2>
+  <div class="divider"></div>
+  <p class="lead" style="color:rgba(245,242,236,.75)">Most retirement calculators show you a smooth line going up and to the right. Real retirement looks nothing like that. Here are the forces that most plans dangerously underestimate.</p>
+
+  <div class="macro-grid">
+    <div class="macro-card red">
+      <h3>🔴 Inflation — The Silent Tax</h3>
+      <p>At 3.5% inflation, your purchasing power is cut in half in 20 years. What costs $5,000/month today will cost $10,000/month when you are 75. Nearly every retiree underestimates this. In the current environment — with US fiscal expansion, supply chain restructuring, and the political dismantling of global trade arrangements — inflation is likely to run higher and longer than historical averages.</p>
+    </div>
+    <div class="macro-card amber">
+      <h3>🟡 Dollar Devaluation — The Invisible Erosion</h3>
+      <p>Separate from domestic inflation, the US dollar's global purchasing power is being structurally weakened. The current US administration is deliberately reducing American participation in the multilateral trade and financial systems that gave the dollar its reserve currency premium. A weaker dollar means your domestic savings buy less globally — travel, imported goods, foreign healthcare — all become more expensive in real terms. This is not speculation; it is observable policy.</p>
+    </div>
+    <div class="macro-card red">
+      <h3>🔴 US Debt &amp; Deficit — Systemic Risk</h3>
+      <p>The US national debt now exceeds $34 trillion and the annual deficit runs over $1.5 trillion. The Congressional Budget Office projects interest payments alone will consume 20% of all federal revenue by 2030. This creates structural pressure on Social Security, Medicare, and government bonds. Your retirement plan should assume: Social Security benefits may be reduced 15–20% from projected levels, Medicare costs will rise, and US Treasury returns may be negative in real terms for extended periods.</p>
+    </div>
+    <div class="macro-card amber">
+      <h3>🟡 Sequence of Returns — Timing Is Everything</h3>
+      <p>A 30% market drop in year 2 of retirement is catastrophically different from the same drop in year 15. In year 2, you are forced to sell depressed assets to fund living costs — those shares never recover in your portfolio. This "sequence of returns risk" is the reason retirement portfolios fail even when long-run returns are adequate. The dashboard models this explicitly.</p>
+    </div>
+    <div class="macro-card forest">
+      <h3>🟢 Healthcare — The Largest Unplanned Expense</h3>
+      <p>The average American couple will spend $315,000 on healthcare in retirement (Fidelity 2023 estimate). Before Medicare at 65, ACA premiums for a couple in California can exceed $3,000/month. After 80, long-term care costs average $80,000–$120,000/year. Most retirement plans include none of these costs explicitly.</p>
+    </div>
+    <div class="macro-card steel">
+      <h3>⚫ Longevity — The Risk of Living Long</h3>
+      <p>A healthy 65-year-old American woman has a 50% chance of living past 87, and a 25% chance of reaching 94. Men are close behind. Your retirement plan must survive 30+ years of drawdown. Most people plan for 20. The difference between planning for 20 versus 30 years in the dashboard is often the difference between a comfortable legacy and financial dependence on family.</p>
+    </div>
+  </div>
+
+  <div class="pull-quote" style="margin-top:60px;">
+    <blockquote>"Uncertainty is not a bug in the retirement planning process. It is the entire point of the process."</blockquote>
+    <cite>— The central insight behind Monte Carlo simulation</cite>
+  </div>
+</section>
+</div>
+
+<!-- PROTECTION STRATEGIES -->
+<section class="section">
+  <div class="eyebrow">Building a resilient plan</div>
+  <h2>How to protect against<br>what you cannot predict.</h2>
+  <div class="divider"></div>
+  <p class="lead">You cannot eliminate macroeconomic risk. But you can structure a portfolio and a withdrawal strategy that survives it across a wide range of scenarios.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🌍</div>
+      <h3>Geographic diversification</h3>
+      <p>Hold 20–30% of equity in international developed markets (VXUS, EFA). A weakening dollar actually <em>increases</em> the value of foreign holdings when converted back to USD. This is one of the most reliable dollar-devaluation hedges available.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏠</div>
+      <h3>Real assets as inflation hedge</h3>
+      <p>Real estate, REITs, TIPS (Treasury Inflation-Protected Securities), and commodities all have returns that are mechanically linked to inflation. If inflation rises, so does your income from these assets — partially offsetting the erosion of your fixed-income streams.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🪣</div>
+      <h3>The bucket strategy</h3>
+      <p>Hold 2–3 years of living expenses in cash or short-term T-bills. This means you never have to sell equities during a market downturn. You draw from cash while the market recovers. This single strategy eliminates most sequence-of-returns risk.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📅</div>
+      <h3>Delay Social Security to 70</h3>
+      <p>Every year you delay SS past 62, your benefit grows 6–8%. Delaying from 62 to 70 increases your monthly payment by roughly 76% — permanently. For a 30-year retirement, this is often worth more than any other single planning decision.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <h3>Flexible withdrawal rate</h3>
+      <p>Rather than a rigid 4% withdrawal, use a dynamic rule: reduce withdrawals by 10% in down markets, increase by 5% in strong ones. Studies show this simple adjustment improves portfolio longevity by 5–8 years with minimal impact on lifestyle.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Run the scenarios</h3>
+      <p>The dashboard models base case, bull market, bear market, stagflation, and market corrections. Run all of them. The scenario where you run out of money is not the prediction — it is the warning. It tells you exactly what needs to change.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="section-dark">
+<section class="section" style="text-align:center;">
+  <div class="eyebrow" style="text-align:center;">Ready to start?</div>
+  <h2>Your future self is making<br>decisions right now.</h2>
+  <p style="max-width:560px;margin:0 auto 40px;font-size:18px;color:rgba(245,242,236,.65);">Every day of planning you defer is compounding interest that accrues to uncertainty instead of to your wealth. Open the dashboard, enter your numbers, and run the scenarios. The truth — even an uncomfortable one — is always more valuable than comfortable ignorance.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+    <a href="retirement_dashboard.html" class="btn-primary" style="font-size:16px;padding:16px 40px;">Open the Dashboard</a>
+    <a href="guide.html" class="btn-ghost" style="font-size:16px;padding:16px 40px;">Read the User Guide</a>
+  </div>
+</section>
+</div>
+
+<footer>
+  <p>RetireSmart — a free, open planning tool. <a href="retirement_dashboard.html">Dashboard</a> · <a href="guide.html">Guide</a> · Built for educational purposes only. Not financial advice. Consult a licensed financial advisor for personalized guidance.</p>
+</footer>
+
+</body>
+</html>

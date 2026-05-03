@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Guide — RetireSmart Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a18;
+  --paper: #f5f2ec;
+  --cream: #ede9e0;
+  --gold: #c8922a;
+  --gold-light: #e8b84b;
+  --forest: #2d5a3d;
+  --steel: #4a5568;
+  --muted: #8a8578;
+  --blue: #2c5f8a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.7; }
+
+/* Nav */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  padding: 16px 48px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(26,26,24,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(200,146,42,.15);
+}
+.nav-brand { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--gold-light); text-decoration: none; }
+.nav-links { display: flex; gap: 32px; }
+.nav-links a { font-size: 13px; color: rgba(245,242,236,.6); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+
+/* Layout */
+.guide-wrap {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: sticky;
+  top: 57px;
+  height: calc(100vh - 57px);
+  overflow-y: auto;
+  padding: 40px 24px;
+  border-right: 1px solid rgba(0,0,0,.08);
+  background: var(--cream);
+}
+.sidebar-title { font-size: 10px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; margin-top: 24px; }
+.sidebar-title:first-child { margin-top: 0; }
+.sidebar nav { display: flex; flex-direction: column; gap: 2px; }
+.sidebar a { font-size: 13px; color: var(--steel); text-decoration: none; padding: 6px 10px; border-radius: 5px; transition: all .15s; }
+.sidebar a:hover { background: rgba(200,146,42,.1); color: var(--gold); }
+.sidebar a.active { background: rgba(200,146,42,.15); color: var(--gold); font-weight: 500; }
+
+/* Content */
+.content { padding: 56px 64px; max-width: 820px; }
+
+/* Typography */
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+h1 { font-family: 'DM Serif Display', serif; font-size: 48px; line-height: 1.1; margin-bottom: 20px; }
+h2 { font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1.2; margin: 56px 0 16px; padding-top: 56px; border-top: 1px solid rgba(0,0,0,.08); color: var(--ink); }
+h2:first-of-type { border-top: none; padding-top: 0; margin-top: 32px; }
+h3 { font-family: 'DM Serif Display', serif; font-size: 22px; margin: 32px 0 10px; color: var(--ink); }
+p { font-size: 15px; color: var(--steel); margin-bottom: 16px; line-height: 1.8; }
+.lead { font-size: 18px; color: var(--steel); font-weight: 300; line-height: 1.9; margin-bottom: 32px; }
+.divider { width: 48px; height: 3px; background: var(--gold); margin: 0 0 32px; }
+
+/* Callout boxes */
+.callout {
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.callout.tip    { background: rgba(45,90,61,.07);   border-left: 4px solid var(--forest); }
+.callout.warn   { background: rgba(200,146,42,.08); border-left: 4px solid var(--gold); }
+.callout.info   { background: rgba(44,95,138,.07);  border-left: 4px solid var(--blue); }
+.callout.danger { background: rgba(192,57,43,.07);  border-left: 4px solid #c0392b; }
+.callout strong { display: block; margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.callout.tip    strong { color: var(--forest); }
+.callout.warn   strong { color: var(--gold); }
+.callout.info   strong { color: var(--blue); }
+.callout.danger strong { color: #c0392b; }
+.callout p { margin: 0; color: var(--steel); font-size: 14px; }
+
+/* Input table */
+.input-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 14px; }
+.input-table th { background: var(--cream); padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; color: var(--muted); border-bottom: 2px solid rgba(0,0,0,.08); }
+.input-table td { padding: 10px 14px; border-bottom: 1px solid rgba(0,0,0,.06); vertical-align: top; }
+.input-table td:first-child { font-weight: 500; white-space: nowrap; color: var(--ink); }
+.input-table td:nth-child(2) { color: var(--steel); }
+.input-table td:last-child { color: var(--muted); font-size: 13px; }
+
+/* Steps */
+.step { display: flex; gap: 20px; margin-bottom: 32px; }
+.step-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--gold); color: var(--ink); font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+.step-body h3 { margin-top: 0; font-size: 18px; }
+.step-body p  { margin-bottom: 0; font-size: 14px; }
+
+/* Scenario cards */
+.scen-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin: 24px 0; }
+.scen-card { border-radius: 8px; padding: 20px; border: 1px solid rgba(0,0,0,.08); }
+.scen-name { font-weight: 600; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.scen-card p { font-size: 13px; margin: 0; }
+
+/* Code-style field names */
+code { background: rgba(0,0,0,.06); border-radius: 4px; padding: 2px 6px; font-size: 13px; font-family: monospace; color: var(--ink); }
+
+/* Column toggle guide */
+.col-guide { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin: 20px 0; }
+.col-item { padding: 14px 16px; border-radius: 6px; border: 1px solid rgba(0,0,0,.07); }
+.col-item .col-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+.col-item p { font-size: 12px; margin: 0; }
+.col-income  { border-left: 4px solid #378ADD; }
+.col-costs   { border-left: 4px solid #E24B4A; }
+.col-wealth  { border-left: 4px solid #1D9E75; }
+.col-core    { border-left: 4px solid #7F77DD; }
+
+/* FAQ */
+.faq-item { margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid rgba(0,0,0,.07); }
+.faq-item:last-child { border-bottom: none; }
+.faq-q { font-weight: 600; font-size: 16px; margin-bottom: 10px; color: var(--ink); }
+.faq-a { font-size: 14px; color: var(--steel); line-height: 1.8; margin: 0; }
+
+footer { background: var(--ink); padding: 40px 48px; text-align: center; }
+footer p { font-size: 13px; color: rgba(245,242,236,.4); margin: 0; }
+footer a { color: var(--gold); text-decoration: none; }
+
+@media(max-width:900px) {
+  .guide-wrap { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid rgba(0,0,0,.08); padding: 24px; }
+  .content { padding: 40px 24px; }
+  .scen-grid, .col-guide { grid-template-columns: 1fr; }
+  .topnav { padding: 14px 24px; }
+  .nav-links { gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="index.html" class="nav-brand">RetireSmart</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="guide.html">User Guide</a>
+    <a href="retirement_dashboard.html">Dashboard →</a>
+  </div>
+</nav>
+
+<div class="guide-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Getting started</div>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#profile">Your profile inputs</a>
+    </nav>
+    <div class="sidebar-title">Using the dashboard</div>
+    <nav>
+      <a href="#market-params">Market parameters</a>
+      <a href="#scenarios">Quick scenarios</a>
+      <a href="#charts">Reading the charts</a>
+      <a href="#table">The detail table</a>
+      <a href="#columns">Column toggles</a>
+    </nav>
+    <div class="sidebar-title">Understanding results</div>
+    <nav>
+      <a href="#kpis">KPI cards</a>
+      <a href="#risks">Risks &amp; recommendations</a>
+      <a href="#banners">Warning banners</a>
+      <a href="#phases">Income phases</a>
+    </nav>
+    <div class="sidebar-title">Key concepts</div>
+    <nav>
+      <a href="#bridge">The bridge gap</a>
+      <a href="#mortgage">Mortgage payoff</a>
+      <a href="#401k">401K access age</a>
+      <a href="#healthcare">Healthcare costs</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <div class="eyebrow">Complete reference</div>
+    <h1>User Guide</h1>
+    <div class="divider"></div>
+    <p class="lead">This guide explains every input, every chart, every scenario, and every number in the RetireSmart dashboard. Read it once and you will understand not just how to use the tool — but why each model decision was made.</p>
+
+    <!-- OVERVIEW -->
+    <h2 id="overview">Overview</h2>
+    <p>The dashboard is a year-by-year retirement projection model that runs from your current age to age 90+. It models six income phases, five types of costs, three asset pools (liquid, retirement accounts, real estate), and up to six market scenarios simultaneously.</p>
+    <p>Unlike simple retirement calculators, this tool:</p>
+    <ul style="margin:0 0 20px 20px;color:var(--steel);font-size:15px;line-height:2;">
+      <li>Models <strong>recessions explicitly</strong> — not just average returns</li>
+      <li>Separates <strong>mortgage (fixed nominal)</strong> from living expenses (inflation-adjusted)</li>
+      <li>Models <strong>healthcare costs</strong> in three phases (employer, ACA, Medicare)</li>
+      <li>Includes a <strong>real estate backstop</strong> — when liquid assets hit zero, rental equity is tapped</li>
+      <li>Shows <strong>dynamic risks and recommendations</strong> that change with each scenario</li>
+      <li>Is fully <strong>customizable</strong> — every number is an input</li>
+    </ul>
+
+    <div class="callout info">
+      <strong>📌 Who this is for</strong>
+      <p>This tool is designed for people in their 40s–60s with complex financial situations: multiple income streams, equity compensation (RSUs), real estate, deferred compensation, and retirement accounts at multiple employers. If your situation is simpler, many inputs can be set to zero.</p>
+    </div>
+
+    <!-- QUICKSTART -->
+    <h2 id="quickstart">Quick Start</h2>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Open Your Profile</h3>
+        <p>Click <strong>"Your Profile"</strong> at the top of the dashboard to expand the input panel. All fields have defaults pre-filled. If you are sharing with a friend, click <strong>"Reset to Bay Area defaults"</strong> first to clear any personal data.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Enter Your Numbers</h3>
+        <p>Work through each section: Ages &amp; Timeline, Income Sources, Current Assets, Deferred Comp, Expenses, and Tax Rates. Don't worry about precision — reasonable estimates are fine. The model is most sensitive to retirement age, monthly expenses, and current asset levels.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Click Update Dashboard</h3>
+        <p>All five charts, the KPI cards, the risk panel, and the detail table update simultaneously. The model runs a full year-by-year projection from your current age to 90+.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Run All Six Scenarios</h3>
+        <p>Click each scenario button — Base, Bull, Bear, Stagflation, 10% correction, 30% crash. Notice how the risks and recommendations change with each scenario. The scenario where your liquid NW hits zero is the most important one to understand.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h3>Read the Risk Panel</h3>
+        <p>The Risk Assessment &amp; Recommendations section below the KPIs is scenario-specific and computed from your actual numbers. Red items are critical. Yellow are important. Read these carefully — they represent the most impactful actions you can take.</p>
+      </div>
+    </div>
+
+    <!-- PROFILE INPUTS -->
+    <h2 id="profile">Your Profile Inputs — Complete Reference</h2>
+
+    <h3>Ages &amp; Timeline</h3>
+    <table class="input-table">
+      <thead><tr><th>Field</th><th>What it means</th><th>Typical range</th></tr></thead>
+      <tbody>
+        <tr><td>Your current age</td><td>Starting point for the projection</td><td>Any age 30–65</td></tr>
+        <tr><td>Your retirement age</td><td>Year your salary and RSUs stop. Earlier = longer drawdown. Each year earlier increases bridge gap significantly.</td><td>50–67</td></tr>
+        <tr><td>Partner current age</td><td>Used to calculate partner income duration and healthcare bridge timing. Set to 0 if single.</td><td>—</td></tr>
+        <tr><td>Partner retirement age</td><td>Year partner income stops. Partner income is often the critical bridge between your retirement and 401K access.</td><td>55–67</td></tr>
+        <tr><td>401K / IRA access age</td><td>Age you can draw from tax-advantaged accounts without penalty. Standard is 59½. If you leave your employer at 55+, the Rule of 55 may allow penalty-free access at 55.</td><td>55 or 59</td></tr>
+        <tr><td>Social Security start age</td><td>When SS payments begin. Every year of delay past 62 increases benefit 6–8%. Delaying from 62 to 70 increases monthly payment by ~76%.</td><td>62–70</td></tr>
+        <tr><td>Mortgage payoff age</td><td>Age when your primary home mortgage ends. At this age, the monthly mortgage amount is removed from expenses entirely (not inflation-adjusted — it is a fixed nominal payment that disappears).</td><td>65–80</td></tr>
+        <tr><td>Home mortgage / mo</td><td>Your current fixed monthly mortgage payment. <strong>Include this in your Total Monthly Expenses field too</strong> — the model splits them automatically.</td><td>$2K–$15K</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <strong>⚠️ Important: Expenses include mortgage</strong>
+      <p>The "Total Monthly Expenses" field should include your mortgage payment. The model automatically separates it: mortgage stays fixed nominal until payoff age, while the rest of your expenses grow with inflation. Do not enter living costs separately from mortgage — enter the total.</p>
+    </div>
+
+    <h3>Income Sources</h3>
+    <table class="input-table">
+      <thead><tr><th>Field</th><th>What it means</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Your salary</td><td>Gross annual base salary. Grows at 2%/yr pre-retirement in the model.</td><td>Include expected raises implicitly</td></tr>
+        <tr><td>Annual bonus</td><td>Expected average annual bonus. Added to salary for income calculation.</td><td>Use a conservative average</td></tr>
+        <tr><td>RSU shares / yr (post-tax)</td><td>Number of shares you actually receive after tax withholding each year. <strong>No additional tax is applied to these in the model</strong> — they are already net.</td><td>Employer withholds ~37–40%</td></tr>
+        <tr><td>RSU stock price</td><td>Current price per share. The model uses this price for all future vest calculations (conservative — does not assume price appreciation).</td><td>Use today's price</td></tr>
+        <tr><td>Partner salary</td><td>Gross annual salary. Grows 2%/yr and stops at partner retirement age. Set to 0 if single.</td><td>—</td></tr>
+        <tr><td>Rental net income / mo</td><td>Net monthly income from all rental properties after mortgage, taxes, insurance, and maintenance. Can be negative if cash flow negative.</td><td>Grows at rental growth rate slider</td></tr>
+        <tr><td>Dividends / other</td><td>Annual income from dividends, hotel dividends, side businesses, or other passive sources. Grows with inflation in the model.</td><td>—</td></tr>
+        <tr><td>Social Security</td><td>Your estimated annual SS benefit in today's dollars at your elected start age. The model applies inflation indexing and a 15% haircut for purchasing power erosion.</td><td>Check ssa.gov for your estimate</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Current Assets</h3>
+    <table class="input-table">
+      <thead><tr><th>Field</th><th>What it means</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Liquid portfolio</td><td>All taxable brokerage accounts, stocks, ETFs, crypto, savings. This is the primary drawdown pool in retirement and the first to be depleted.</td><td>Do not include retirement accounts here</td></tr>
+        <tr><td>Your retirement accounts</td><td>Your 401K, IRA, 403b, Roth IRA combined. Only accessible at your 401K access age (or 59½). Grows at 105% of market return in the model (slightly more aggressive allocation assumed).</td><td>—</td></tr>
+        <tr><td>Partner retirement accounts</td><td>Partner's 401K, IRA combined. Grows at 102% of market return. Set to 0 if single.</td><td>—</td></tr>
+        <tr><td>Real estate equity</td><td>Total equity (market value minus mortgage balance) across all properties. This is the backstop — if liquid hits zero, the model draws from RE equity at 75¢ on the dollar.</td><td>Grows at RE appreciation slider rate</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Deferred Compensation</h3>
+    <p>If your employer offers a Non-Qualified Deferred Compensation (NQDC) plan, enter the details here. The model accrues your deferred comp pre-retirement and pays it out as a lump sum at your elected age, net of the stated tax rate.</p>
+
+    <div class="callout danger">
+      <strong>🔴 Critical tax planning point</strong>
+      <p>In California, a lump-sum deferred comp payout is taxed as ordinary income at up to 50%+ (37% federal + 13.3% state). If you have a large deferred comp balance, electing installment payouts over 5–10 years can save tens of thousands of dollars in taxes. This is one of the highest-leverage tax decisions available to high-income earners.</p>
+    </div>
+
+    <!-- MARKET PARAMETERS -->
+    <h2 id="market-params">Market Parameters</h2>
+    <p>The six sliders control the simulation environment. These are independent from your personal inputs — you can change them without re-entering your profile.</p>
+
+    <table class="input-table">
+      <thead><tr><th>Slider</th><th>What it does</th><th>How often</th></tr></thead>
+      <tbody>
+        <tr><td>Market correction severity</td><td>How deep the market drops during a recession. 10% = mild correction. 30%+ = 2008-level crash. The model applies this drawdown at the recession frequency, then models a 1-2 year recovery at half the drop rate.</td><td>At recession events</td></tr>
+        <tr><td>Annual inflation rate</td><td>Applied to: living expenses, healthcare, dividends, Social Security. NOT applied to: mortgage (fixed nominal), RSU value, or salary (uses 2% growth instead).</td><td>Every year</td></tr>
+        <tr><td>Portfolio growth rate</td><td>Annual return on liquid portfolio and retirement accounts between recession events. Historical US equity average is ~7–8%. Conservative planning uses 5–6%.</td><td>Every non-recession year</td></tr>
+        <tr><td>Recession frequency</td><td>How often market corrections occur. Historical US average is roughly every 7–10 years. The model spaces recessions exactly at this interval (deterministic, not random).</td><td>Periodic</td></tr>
+        <tr><td>Real estate appreciation</td><td>Annual appreciation on all property equity. Bay Area historical average is 4–5%. During recessions, RE appreciation drops to 30% of this rate (RE markets are slower-moving than equities).</td><td>Every year</td></tr>
+        <tr><td>Rental income growth</td><td>Annual rent increase rate, compounded. 2–3% is typical for a stable market. This applies to net rental income, growing your passive income stream over time.</td><td>Every year</td></tr>
+      </tbody>
+    </table>
+
+    <!-- SCENARIOS -->
+    <h2 id="scenarios">Quick Scenarios</h2>
+    <p>Each scenario preset simultaneously adjusts all six market sliders to a coherent set of assumptions representing a macroeconomic environment.</p>
+
+    <div class="scen-grid">
+      <div class="scen-card">
+        <div class="scen-name">⭐ Base case</div>
+        <p>20% correction, 3.5% inflation, 7% growth, recession every 9 years. Represents a reasonable planning baseline — neither optimistic nor pessimistic. Start here.</p>
+      </div>
+      <div class="scen-card">
+        <div class="scen-name">📈 Bull market</div>
+        <p>10% correction, 3% inflation, 9% growth, recession every 12 years. Optimistic scenario. Good for testing upside potential and whether you can retire earlier.</p>
+      </div>
+      <div class="scen-card">
+        <div class="scen-name">📉 Bear / recession</div>
+        <p>30% correction, 4% inflation, 5% growth, recession every 6 years. Conservative scenario. If your plan survives this, it is robust.</p>
+      </div>
+      <div class="scen-card">
+        <div class="scen-name">🔥 Stagflation</div>
+        <p>25% correction, 6.5% inflation, 4.5% growth, recession every 7 years. Models a 1970s-style environment — high inflation with low growth. The worst combination for retirement portfolios.</p>
+      </div>
+      <div class="scen-card">
+        <div class="scen-name">10% correction</div>
+        <p>Mild correction with base case growth and inflation. Shows how a minor downturn affects your plan. Good for stress-testing without catastrophizing.</p>
+      </div>
+      <div class="scen-card">
+        <div class="scen-name">30% crash</div>
+        <p>Severe crash with base case inflation and growth outside of recession periods. Models a 2008 or 2020-style event. Reveals sequence of returns vulnerability.</p>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>✅ Best practice</strong>
+      <p>Always run Bear and Stagflation scenarios. If your liquid NW hits zero in either, that is not a prediction — it is a warning that your plan needs adjustment. The Recommended Actions panel will tell you exactly what to change.</p>
+    </div>
+
+    <!-- CHARTS -->
+    <h2 id="charts">Reading the Charts</h2>
+
+    <h3>Chart 1 — Total Net Worth by Age</h3>
+    <p>Stacked bar chart showing three asset pools: liquid portfolio (blue), retirement accounts (green), and real estate equity (purple). Faded colors indicate recession years. This chart shows your <em>total</em> wealth trajectory. Even if liquid hits zero, total NW can remain high — but that means you are forced to liquidate illiquid assets.</p>
+
+    <h3>Chart 2 — Annual Income by Source</h3>
+    <p>Shows where your money comes from each year. Watch for the cliff when salary stops at retirement and how income rebuilds as 401K draws, Social Security, and rental income take over. The colored bands clearly show which income sources dominate each life phase.</p>
+
+    <h3>Chart 3 — Annual Costs</h3>
+    <p>Four cost layers stacked: living expenses (red, inflation-growing), mortgage (dark blue, fixed nominal), taxes (amber), and healthcare (orange). <strong>The mortgage band disappears completely at payoff age</strong> — you will see a step-down in total costs that represents a significant cash flow improvement.</p>
+
+    <h3>Chart 4 — Liquid NW Health</h3>
+    <p>Color-coded bar chart of your liquid portfolio balance: green = above $500K (healthy), amber = $200K–$500K (watch closely), red = below $200K (danger zone). This is the most important chart for assessing liquidity risk. A good plan keeps this in green or light amber throughout retirement.</p>
+
+    <h3>Chart 5 — Net Cash Flow</h3>
+    <p>Green bars = surplus years (income exceeds costs — portfolio grows). Red bars = deficit years (costs exceed income — portfolio draws down). In accumulation years, you should see large green bars. In early retirement, red bars are normal if they are modest. Large persistent red bars indicate a structurally underfunded retirement.</p>
+
+    <!-- TABLE -->
+    <h2 id="table">The Detail Table</h2>
+    <p>Every year from your current age to 90+ is shown as a row. Red rows are recession years. Yellow rows are years where real estate equity was tapped as a backstop.</p>
+    <p>Key columns to watch:</p>
+    <ul style="margin:0 0 20px 20px;color:var(--steel);font-size:14px;line-height:2;">
+      <li><strong>Net flow</strong> — positive means portfolio grows, negative means it draws down. The transition from negative to positive (usually around mortgage payoff age) is a key milestone.</li>
+      <li><strong>Mortgage</strong> — shows the fixed $X/mo payment each year, then switches to the green "FREE" label at payoff age.</li>
+      <li><strong>Liquid NW</strong> — color-coded green/amber/red. Watch for when this starts declining and at what rate.</li>
+      <li><strong>401K draw</strong> — zero until access age, then a meaningful income stream that grows slightly each year.</li>
+    </ul>
+
+    <!-- COLUMN TOGGLES -->
+    <h2 id="columns">Column Toggles</h2>
+    <p>With 21 possible columns, the table can be overwhelming. Use the quick view buttons and individual column toggles to show exactly what you need.</p>
+
+    <div class="col-guide">
+      <div class="col-item col-core">
+        <div class="col-name">📊 Summary view</div>
+        <p>Age, Total in, Total out, Net flow, Liquid NW, Total NW — the 6 most important columns. Fits on any screen without scrolling.</p>
+      </div>
+      <div class="col-item col-income">
+        <div class="col-name">💵 Income view</div>
+        <p>All income sources broken out: salary, RSU, partner, 401K, rental, dividends, SS, deferred comp, RE tap.</p>
+      </div>
+      <div class="col-item col-costs">
+        <div class="col-name">📉 Costs view</div>
+        <p>Living expenses, mortgage, taxes, healthcare, total out, net flow, liquid NW.</p>
+      </div>
+      <div class="col-item col-wealth">
+        <div class="col-name">🏠 Wealth view</div>
+        <p>Liquid NW, retirement accounts, real estate equity, total NW, net flow. Shows asset pool trajectories.</p>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <h2 id="kpis">KPI Cards</h2>
+    <p>Six summary metrics at a glance:</p>
+    <ul style="margin:0 0 20px 20px;color:var(--steel);font-size:14px;line-height:2.2;">
+      <li><strong>NW at retirement</strong> — total net worth at your elected retirement age</li>
+      <li><strong>Liquid at retirement</strong> — liquid portfolio only at retirement (most important for near-term sustainability)</li>
+      <li><strong>NW at age 70</strong> — trajectory check at a key milestone</li>
+      <li><strong>Liquid at age 70</strong> — color-coded: green = healthy, amber = watch, red = at risk</li>
+      <li><strong>Cash freed at payoff</strong> — annual cash flow improvement when mortgage ends</li>
+      <li><strong>RE backstop used</strong> — total real estate equity drawn if liquid depleted. None = plan is self-sustaining. Any amount = you will need to sell property.</li>
+    </ul>
+
+    <!-- RISKS & RECS -->
+    <h2 id="risks">Risks &amp; Recommendations Panel</h2>
+    <p>This panel <strong>changes with every scenario</strong> and is computed from your actual input numbers — not generic advice. Risks are color-coded:</p>
+    <ul style="margin:0 0 20px 20px;color:var(--steel);font-size:14px;line-height:2.2;">
+      <li>🔴 <strong>High severity</strong> — requires action before retiring. Ignoring this significantly increases probability of running out of money.</li>
+      <li>🟡 <strong>Medium severity</strong> — important to address, but plan survives without action in most scenarios.</li>
+      <li>🟢 <strong>Low severity or opportunity</strong> — informational. In bull cases, these may flag upside opportunities (retire earlier, spend more).</li>
+    </ul>
+    <p>Recommendations are sorted by priority (Critical first) and include the specific dollar amounts computed from your inputs — not hypothetical examples.</p>
+
+    <!-- PHASES -->
+    <h2 id="phases">Income Phases</h2>
+    <p>The model recognizes six distinct phases in your financial life. Understanding which phase each year falls into explains why the cash flow looks the way it does.</p>
+
+    <table class="input-table">
+      <thead><tr><th>Phase</th><th>Ages</th><th>What drives cash flow</th></tr></thead>
+      <tbody>
+        <tr><td>Accumulation</td><td>Now → your retirement</td><td>Salary + RSUs + partner income. Largest surplus years. Maximum savings rate. 401K contributions.</td></tr>
+        <tr><td>Bridge</td><td>Your retirement → partner retirement</td><td>Partner income only (your salary gone). Passive income (rental, dividends). Liquid portfolio begins drawing.</td></tr>
+        <tr><td>Gap</td><td>Partner retirement → 401K access</td><td>Most vulnerable period. No salary, no 401K, no SS. Pure passive income + portfolio draw. Healthcare costs at maximum.</td></tr>
+        <tr><td>Pre-Medicare</td><td>401K access → age 65</td><td>401K draws begin — significant income boost. ACA healthcare costs continue. Portfolio pressure eases.</td></tr>
+        <tr><td>Pre-SS</td><td>Age 65 → SS start age</td><td>Medicare begins (major healthcare cost reduction). 401K continues. No SS yet.</td></tr>
+        <tr><td>Pre-payoff</td><td>SS start → mortgage payoff</td><td>SS adds major income floor. Portfolio should be stabilizing or growing. Mortgage still running.</td></tr>
+        <tr><td>Legacy</td><td>Mortgage payoff → end</td><td>Mortgage gone — large cash flow improvement. SS + 401K + rental = strong passive income. Net worth often recovers and grows.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- KEY CONCEPTS -->
+    <h2 id="bridge">The Bridge Gap</h2>
+    <p>The bridge gap is the period between your retirement and your 401K access age. During this window, you have no salary, no retirement draws, and (after partner retires) no partner income. Only passive income and the liquid portfolio.</p>
+    <p>This is almost always the most financially vulnerable period in the entire plan. The longer this gap, the more liquid portfolio you need at retirement. If you retire at 55 and 401K access is 61, you need 6 years of expenses covered from liquid assets alone — typically $1.5–$2.5M depending on lifestyle.</p>
+
+    <div class="callout tip">
+      <strong>✅ Rule of 55</strong>
+      <p>If you leave your employer at age 55 or later, IRS Rule of 55 allows penalty-free withdrawals from that employer's 401K (not IRAs or other employers' 401Ks). This can dramatically reduce the bridge gap cost. Check with your plan administrator before retiring.</p>
+    </div>
+
+    <h2 id="mortgage">Mortgage Payoff</h2>
+    <p>The model treats your mortgage as a <em>fixed nominal payment</em> that stops completely at payoff age. It does not inflate. This is mathematically correct — your mortgage payment is fixed in nominal dollars. What changes is its purchasing power cost, which declines as inflation rises (another reason inflation helps existing homeowners).</p>
+    <p>At payoff age, the full monthly mortgage amount disappears from expenses. In the detail table, the Mortgage column switches from a dollar amount to the green <strong>FREE</strong> label. In Chart 3, the dark blue band disappears. In Chart 5, you will see a step-up in net cash flow. This is one of the most impactful milestone events in the entire retirement plan.</p>
+
+    <h2 id="401k">401K Access Age</h2>
+    <p>Standard IRS rules allow penalty-free withdrawals at 59½. Early withdrawals incur a 10% penalty plus ordinary income tax. The model assumes you use 59 as the access age if standard rules apply.</p>
+    <p>If you elect Rule of 55 (leaving employer at 55+), set this to 55. This dramatically improves bridge phase cash flow. Note: Rule of 55 only applies to the 401K of the employer you leave — not to IRAs or prior employer 401Ks (unless rolled in).</p>
+    <p>The 401K draw rate in the model starts at 5%/year and increases slightly after age 70 to reflect RMD (Required Minimum Distribution) rules, which force increasing withdrawals from traditional retirement accounts starting at age 73.</p>
+
+    <h2 id="healthcare">Healthcare Costs</h2>
+    <p>Healthcare is modeled in three phases, reflecting how coverage changes through retirement:</p>
+    <ul style="margin:0 0 20px 20px;color:var(--steel);font-size:14px;line-height:2.2;">
+      <li><strong>Before partner retirement:</strong> Employer plan (zero ACA cost assumed — partner's employer covers both)</li>
+      <li><strong>Partner retirement to age 65:</strong> ACA marketplace — per-person amount × number of people uninsured (1 or 2)</li>
+      <li><strong>Age 65+:</strong> Medicare — per-person amount × 2 (both on Medicare)</li>
+    </ul>
+    <p>All healthcare costs are inflation-adjusted. Medical inflation historically runs 5–7%/yr — potentially higher than the general inflation rate you set. The ACA cost per person is a major swing factor. In California, high-income retirees do not qualify for ACA subsidies, so $800–$3,200/month per person is realistic depending on the plan level chosen.</p>
+
+    <!-- FAQ -->
+    <h2 id="faq">Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Why does the model use a fixed ORCL/RSU price rather than projecting growth?</div>
+      <p class="faq-a">Conservative planning uses today's price to avoid double-counting. If you want to model price appreciation, you can adjust the RSU price slider upward. The base assumption — that the stock price stays flat — is actually a meaningful hedge: if it grows, your outcome is better than shown.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Why is the mortgage not inflation-adjusted?</div>
+      <p class="faq-a">Because mortgages are fixed nominal contracts. Your payment is $X/month regardless of inflation. What changes is how much of a burden that payment represents in real terms (it gets easier as inflation erodes its real cost). The model correctly represents this by keeping the mortgage fixed while inflating living expenses.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What does "real estate backstop" mean?</div>
+      <p class="faq-a">If your liquid portfolio hits zero in any year, the model automatically draws from real estate equity — simulating selling a rental property or drawing a HELOC. The model applies a 25% transaction cost (taxes, realtor fees, time). This means you still have access to wealth, but at a discount. The "RE backstop used" KPI shows total equity drawn.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Should I be worried if the Bear scenario shows me running out of money?</div>
+      <p class="faq-a">Not necessarily. The Bear scenario is a stress test, not a prediction. Its purpose is to show you the specific ages and amounts where the plan becomes fragile — so you can take preventive action now. The Recommended Actions panel will show you the specific levers (retire later, consult part-time, reduce bridge expenses) and their dollar impact.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">The numbers seem better / worse than I expected. What might be wrong?</div>
+      <p class="faq-a">The most common input errors: (1) entering expenses <em>without</em> mortgage when the model expects the total including mortgage — this understates costs significantly; (2) entering RSU shares as <em>pre-tax</em> shares — the model expects post-tax shares already; (3) setting partner income to zero when partner still works. Double-check these three if results seem off.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I use this for a simpler situation (no RSUs, no deferred comp, no real estate)?</div>
+      <p class="faq-a">Absolutely. Set RSU shares to 0, deferred comp % to 0, rental income to 0, and real estate equity to 0. The model will still run the full projection using salary, savings, retirement accounts, and Social Security only. This represents a more typical single-income household situation.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I host this for friends to use?</div>
+      <p class="faq-a">The easiest method is GitHub Pages. Create a free GitHub account, upload all three HTML files (index.html, guide.html, retirement_dashboard.html) to a public repository, and enable GitHub Pages in settings. Your site will be live at yourusername.github.io/repositoryname within minutes — free, permanent, and no server required.</p>
+    </div>
+
+    <div style="margin-top:60px;padding:32px;background:var(--cream);border-radius:12px;text-align:center;">
+      <div class="eyebrow" style="text-align:center;">Ready to run your numbers?</div>
+      <h3 style="margin-bottom:12px;">Open the Dashboard</h3>
+      <p style="margin-bottom:24px;font-size:14px;">All your inputs are saved in the browser session. The dashboard is ready to use.</p>
+      <a href="retirement_dashboard.html" style="display:inline-block;padding:12px 32px;background:var(--gold);color:var(--ink);font-weight:600;border-radius:6px;text-decoration:none;">Open Dashboard →</a>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <p>RetireSmart — <a href="index.html">Home</a> · <a href="guide.html">Guide</a> · <a href="retirement_dashboard.html">Dashboard</a> · For educational purposes only. Not financial advice.</p>
+</footer>
+
+<script>
+// Highlight active sidebar item on scroll
+var headings = document.querySelectorAll('h2[id], h3[id]');
+var sideLinks = document.querySelectorAll('.sidebar a');
+window.addEventListener('scroll', function() {
+  var pos = window.scrollY + 120;
+  var current = '';
+  headings.forEach(function(h) {
+    if (h.offsetTop <= pos) current = h.id;
+  });
+  sideLinks.forEach(function(a) {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>

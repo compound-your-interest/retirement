@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retirement Planning Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f8f6;color:#222;padding:24px;max-width:1400px;margin:0 auto;}
+h1{font-size:22px;font-weight:700;margin-bottom:4px;}
+.sub{font-size:13px;color:#888;margin-bottom:24px;}
+.panel{background:#fff;border-radius:12px;border:1px solid #e8e8e4;padding:20px;margin-bottom:20px;}
+.ptitle{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:16px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.pnote{font-weight:400;font-size:11px;color:#bbb;text-transform:none;letter-spacing:0;}
+.caret{font-size:11px;color:#ccc;margin-left:auto;}
+.hidden{display:none;}
+.isec{margin-bottom:16px;}
+.isec-title{font-size:12px;font-weight:600;color:#444;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #f0f0ee;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.field{display:flex;flex-direction:column;gap:3px;}
+.field label{font-size:11px;color:#777;font-weight:500;}
+.field input{padding:7px 10px;border:1px solid #ddd;border-radius:7px;font-size:13px;color:#222;background:#fafaf8;width:100%;}
+.field input:focus{outline:none;border-color:#378ADD;background:#fff;}
+.hint{font-size:10px;color:#bbb;}
+.btnrow{display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap;}
+.abtn{padding:9px 22px;font-size:13px;font-weight:600;border:none;border-radius:8px;cursor:pointer;background:#378ADD;color:#fff;}
+.rbtn{padding:8px 16px;font-size:12px;border:1px solid #ddd;border-radius:8px;cursor:pointer;background:#f5f5f3;color:#555;}
+.slgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.slitem label{display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:5px;}
+.slitem label b{font-weight:600;color:#222;}
+input[type=range]{width:100%;accent-color:#378ADD;cursor:pointer;}
+.tick{display:flex;justify-content:space-between;font-size:10px;color:#bbb;margin-top:2px;}
+/* Scenario buttons */
+.scenrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.sbtn{padding:7px 16px;font-size:12px;font-weight:500;border:1px solid #ddd;border-radius:20px;cursor:pointer;background:#fff;color:#555;}
+.sbtn:hover{border-color:#378ADD;color:#378ADD;}
+.sbtn.on{background:#378ADD;color:#fff;border-color:#378ADD;}
+/* KPIs */
+.kgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px;}
+.kcard{background:#f5f5f3;border-radius:10px;padding:12px;text-align:center;}
+.klbl{font-size:10px;color:#888;margin-bottom:4px;line-height:1.4;}
+.kval{font-size:17px;font-weight:700;}
+.cg{color:#1D9E75;}.ca{color:#BA7517;}.cr{color:#A32D2D;}.cb{color:#378ADD;}.cp{color:#7F77DD;}
+/* Banners */
+.dban{display:none;background:#fff2f2;border:1.5px solid #e24b4a;border-radius:10px;padding:14px 18px;margin-bottom:16px;}
+.dban.on{display:block;}
+.dtit{font-size:13px;font-weight:700;color:#A32D2D;margin-bottom:6px;}
+.wban{display:none;background:#fff8f0;border:1.5px solid #f0a500;border-radius:10px;padding:14px 18px;margin-bottom:16px;}
+.wban.on{display:block;}
+.wtit{font-size:13px;font-weight:700;color:#BA7517;margin-bottom:6px;}
+.btext{font-size:12px;color:#555;line-height:2;}
+/* Risk/rec panel */
+.rp{background:#fff;border:1px solid #e8e8e4;border-radius:10px;padding:16px;margin-bottom:20px;}
+.rp-title{font-size:12px;font-weight:700;color:#555;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f0f0ee;}
+.risk-item{border-radius:8px;padding:12px;margin-bottom:8px;}
+.risk-title{font-size:12px;font-weight:700;margin-bottom:4px;}
+.risk-body{font-size:11px;color:#555;line-height:1.7;}
+.rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;}
+.rec-card{background:#fafaf8;border-radius:8px;padding:12px;border:1px solid #e8e8e4;}
+.rec-pri{font-size:10px;font-weight:700;margin-bottom:4px;}
+.rec-title{font-size:12px;font-weight:600;color:#333;margin-bottom:4px;}
+.rec-body{font-size:11px;color:#555;line-height:1.6;}
+/* Charts */
+.cblock{margin-bottom:28px;}
+.ctitle{font-size:13px;font-weight:600;color:#333;margin-bottom:8px;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#666;margin-bottom:10px;}
+.li{display:flex;align-items:center;gap:5px;}
+.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+/* Table */
+.tbl-panel{background:#fff;border-radius:12px;border:1px solid #e8e8e4;padding:20px;margin-bottom:20px;}
+.view-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.vbtn{padding:6px 14px;font-size:12px;font-weight:500;border:1px solid #ddd;border-radius:20px;cursor:pointer;background:#fff;color:#666;}
+.vbtn:hover{border-color:#7F77DD;color:#7F77DD;}
+.vbtn.on{background:#7F77DD;color:#fff;border-color:#7F77DD;}
+.tog-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.tbtn{padding:4px 10px;font-size:11px;font-weight:500;border:1.5px solid #ddd;border-radius:5px;cursor:pointer;background:#fff;color:#aaa;}
+.tbtn.on{background:#f5f5f3;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:#f5f5f3;padding:8px 10px;text-align:right;font-weight:600;font-size:11px;color:#555;border-bottom:2px solid #e8e8e4;white-space:nowrap;}
+th:first-child{text-align:left;}
+td{padding:6px 10px;text-align:right;border-bottom:1px solid #f0f0ee;white-space:nowrap;}
+td:first-child{text-align:left;font-weight:500;}
+tr:hover td{background:#fafaf8;}
+tr.rec{background:#fff8f8;}
+tr.war td{background:#fffbf0;}
+.tp{color:#1D9E75;}.tn{color:#A32D2D;}.tw{color:#BA7517;}.tm{color:#ccc;}
+.ptag{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px;background:#f0f0ee;color:#888;}
+.rtag{background:#fde8e8;color:#A32D2D;}
+.ytag{background:#fff3cd;color:#BA7517;font-weight:600;}
+.foot{font-size:11px;color:#aaa;margin-top:16px;line-height:1.9;padding:16px;background:#fafaf8;border-radius:8px;border:1px solid #f0f0ee;}
+@media(max-width:900px){.g4{grid-template-columns:1fr 1fr;}.kgrid{grid-template-columns:repeat(3,1fr);}.slgrid{grid-template-columns:1fr 1fr;}.rec-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+.topnav{position:sticky;top:0;z-index:100;padding:14px 48px;display:flex;justify-content:space-between;align-items:center;background:rgba(26,26,24,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,146,42,.15);margin-bottom:24px;}
+.nav-brand{font-family:'DM Serif Display',serif;font-size:18px;color:#e8b84b;text-decoration:none;}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{font-size:13px;color:rgba(245,242,236,.6);text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:#c8922a;}
+</style>
+<nav class="topnav">
+  <a href="index.html" class="nav-brand">RetireSmart</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="guide.html">User Guide</a>
+    <a href="retirement_dashboard.html" class="active">Dashboard</a>
+  </div>
+</nav>
+<h1>📈 Retirement Planning Dashboard</h1>
+<div class="sub">Enter your numbers and click <strong>Update Dashboard</strong>. Defaults = typical Bay Area senior engineer. Share freely.</div>
+
+<!-- PROFILE INPUT -->
+<div class="panel">
+  <div class="ptitle" onclick="tog('pb','pi')">👤 Your Profile <span class="pnote">— click to expand / collapse</span><span class="caret" id="pi">▼</span></div>
+  <div id="pb">
+
+    <div class="isec">
+      <div class="isec-title">Ages &amp; Timeline</div>
+      <div class="g4">
+        <div class="field"><label>Your current age</label><input type="number" id="i_your_age" value="45"><div class="hint">Your age today</div></div>
+        <div class="field"><label>Your retirement age</label><input type="number" id="i_ret_age" value="60"><div class="hint">When you plan to stop working</div></div>
+        <div class="field"><label>Partner current age</label><input type="number" id="i_wife_age" value="43"><div class="hint">Leave 0 if single</div></div>
+        <div class="field"><label>Partner retirement age</label><input type="number" id="i_wife_ret_age" value="62"><div class="hint">When partner stops working</div></div>
+        <div class="field"><label>401K / IRA access age</label><input type="number" id="i_k401_age" value="60"><div class="hint">59½ standard; 55 = Rule of 55</div></div>
+        <div class="field"><label>Social Security start age</label><input type="number" id="i_ss_age" value="67"><div class="hint">62 min / 70 max</div></div>
+        <div class="field"><label>Mortgage payoff age</label><input type="number" id="i_mort_age" value="70"><div class="hint">Age when home loan ends</div></div>
+        <div class="field"><label>Home mortgage / mo ($)</label><input type="number" id="i_mort_mo" value="5000"><div class="hint">Fixed payment — stops at payoff age</div></div>
+      </div>
+    </div>
+
+    <div class="isec">
+      <div class="isec-title">Income Sources</div>
+      <div class="g4">
+        <div class="field"><label>Your salary ($/yr)</label><input type="number" id="i_salary" value="250000"><div class="hint">Gross base salary (grows 2%/yr)</div></div>
+        <div class="field"><label>Annual bonus ($/yr)</label><input type="number" id="i_bonus" value="25000"><div class="hint">Expected average annual bonus</div></div>
+        <div class="field"><label>RSU shares / yr (post-tax)</label><input type="number" id="i_rsu_sh" value="500"><div class="hint">Shares after tax withholding; 0 if none</div></div>
+        <div class="field"><label>RSU stock price ($)</label><input type="number" id="i_rsu_px" value="200"><div class="hint">Current price — already post-tax</div></div>
+        <div class="field"><label>Partner salary ($/yr)</label><input type="number" id="i_wife_sal" value="150000"><div class="hint">Gross; grows 2%/yr; 0 if single</div></div>
+        <div class="field"><label>Rental net income / mo ($)</label><input type="number" id="i_rental" value="500"><div class="hint">Net after all rental costs; 0 if none</div></div>
+        <div class="field"><label>Dividends / other ($/yr)</label><input type="number" id="i_div" value="5000"><div class="hint">Dividends, side income, etc.</div></div>
+        <div class="field"><label>Social Security ($/yr)</label><input type="number" id="i_ss" value="36000"><div class="hint">Estimated annual SS benefit (today's $)</div></div>
+      </div>
+    </div>
+
+    <div class="isec">
+      <div class="isec-title">Current Assets</div>
+      <div class="g4">
+        <div class="field"><label>Liquid portfolio ($)</label><input type="number" id="i_liq" value="500000"><div class="hint">Stocks, ETFs, brokerage, crypto</div></div>
+        <div class="field"><label>Your retirement accounts ($)</label><input type="number" id="i_ret" value="400000"><div class="hint">Your 401K, IRA, 403b combined</div></div>
+        <div class="field"><label>Partner retirement accounts ($)</label><input type="number" id="i_wret" value="200000"><div class="hint">Partner 401K, IRA combined; 0 if single</div></div>
+        <div class="field"><label>Real estate equity ($)</label><input type="number" id="i_re" value="800000"><div class="hint">Equity across all properties</div></div>
+      </div>
+    </div>
+
+    <div class="isec">
+      <div class="isec-title">Deferred Compensation <span style="font-weight:400;color:#bbb;">(set % to 0 if none)</span></div>
+      <div class="g3">
+        <div class="field"><label>Deferred comp % of salary / yr</label><input type="number" id="i_dc_rate" value="0"><div class="hint">% of salary deferred pre-retirement</div></div>
+        <div class="field"><label>Deferred comp payout age</label><input type="number" id="i_dc_age" value="62"><div class="hint">Age when payout begins</div></div>
+        <div class="field"><label>Payout tax rate (%)</label><input type="number" id="i_dc_tax" value="40"><div class="hint">Fed + state combined on payout</div></div>
+      </div>
+    </div>
+
+    <div class="isec">
+      <div class="isec-title">Expenses &amp; Healthcare</div>
+      <div class="g4">
+        <div class="field"><label>Total monthly expenses ($) ⚠️</label><input type="number" id="i_exp" value="12000"><div class="hint">Include mortgage — model splits it automatically</div></div>
+        <div class="field"><label>Partner retirement savings (%)</label><input type="number" id="i_wsave" value="10"><div class="hint">% of partner salary into retirement accounts</div></div>
+        <div class="field"><label>ACA health / mo / person ($)</label><input type="number" id="i_hca" value="800"><div class="hint">Pre-Medicare monthly per person</div></div>
+        <div class="field"><label>Medicare / mo / person ($)</label><input type="number" id="i_hmed" value="500"><div class="hint">Post-65 Medicare + supplement per person</div></div>
+      </div>
+    </div>
+
+    <div class="isec">
+      <div class="isec-title">Tax Rates</div>
+      <div class="g4">
+        <div class="field"><label>Federal marginal rate (%)</label><input type="number" id="i_ftax" value="32"><div class="hint">Your top federal bracket</div></div>
+        <div class="field"><label>State income tax rate (%)</label><input type="number" id="i_stax" value="9.3"><div class="hint">CA=13.3%, TX/FL=0%, NY≈10.9%</div></div>
+        <div class="field"><label>401K withdrawal rate (%)</label><input type="number" id="i_ktax" value="24"><div class="hint">Effective rate on retirement draws</div></div>
+        <div class="field"><label>Partner effective tax rate (%)</label><input type="number" id="i_wtax" value="24"><div class="hint">Combined effective on partner salary</div></div>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button class="abtn" onclick="go()">↻ Update Dashboard</button>
+      <button class="rbtn" onclick="resetToGeneric()">Reset to Bay Area defaults</button>
+      <span style="font-size:11px;color:#bbb;">Tip: Enter your own numbers above then click Update</span>
+    </div>
+  </div>
+</div>
+
+<!-- MARKET PARAMS -->
+<div class="panel">
+  <div class="ptitle" onclick="tog('sb','si')">🎲 Market &amp; Simulation Parameters <span class="caret" id="si">▼</span></div>
+  <div id="sb">
+    <div class="slgrid">
+      <div class="slitem"><label>Market correction severity <b id="v1">20%</b></label><input type="range" min="10" max="40" value="20" step="5" id="sl1" oninput="document.getElementById('v1').textContent=this.value+'%';go()"><div class="tick"><span>10% mild</span><span>40% crash</span></div></div>
+      <div class="slitem"><label>Annual inflation rate <b id="v2">3.5%</b></label><input type="range" min="3" max="7" value="3.5" step="0.5" id="sl2" oninput="document.getElementById('v2').textContent=this.value+'%';go()"><div class="tick"><span>3% low</span><span>7% high</span></div></div>
+      <div class="slitem"><label>Portfolio growth rate <b id="v3">7.0%</b></label><input type="range" min="4" max="10" value="7" step="0.5" id="sl3" oninput="document.getElementById('v3').textContent=parseFloat(this.value).toFixed(1)+'%';go()"><div class="tick"><span>4% conservative</span><span>10% aggressive</span></div></div>
+      <div class="slitem"><label>Recession every N years <b id="v5">9 yrs</b></label><input type="range" min="5" max="15" value="9" step="1" id="sl5" oninput="document.getElementById('v5').textContent=this.value+' yrs';go()"><div class="tick"><span>5yr frequent</span><span>15yr rare</span></div></div>
+      <div class="slitem"><label>Real estate appreciation <b id="v6">3.5%</b></label><input type="range" min="1" max="6" value="3.5" step="0.5" id="sl6" oninput="document.getElementById('v6').textContent=this.value+'%';go()"><div class="tick"><span>1% flat</span><span>6% hot</span></div></div>
+      <div class="slitem"><label>Rental income growth / yr <b id="v7">2.5%</b></label><input type="range" min="0" max="5" value="2.5" step="0.5" id="sl7" oninput="document.getElementById('v7').textContent=this.value+'%';go()"><div class="tick"><span>0% flat</span><span>5% fast</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIOS -->
+<div class="scenrow">
+  <span style="font-size:12px;color:#888;font-weight:600;">Quick scenario:</span>
+  <button class="sbtn on"  onclick="applyScen('base',this)">⭐ Base case</button>
+  <button class="sbtn" onclick="applyScen('bull',this)">📈 Bull market</button>
+  <button class="sbtn" onclick="applyScen('bear',this)">📉 Bear/recession</button>
+  <button class="sbtn" onclick="applyScen('stag',this)">🔥 Stagflation</button>
+  <button class="sbtn" onclick="applyScen('c10',this)">10% correction</button>
+  <button class="sbtn" onclick="applyScen('c30',this)">30% crash</button>
+</div>
+
+<!-- BANNERS -->
+<div class="dban" id="dban"><div class="dtit">🚨 Liquidity Risk Detected</div><div class="btext" id="ditems"></div></div>
+<div class="wban" id="wban"><div class="wtit">⚠️ Liquidity Stress Warning</div><div class="btext" id="witems"></div></div>
+
+<!-- KPIs -->
+<div class="kgrid" id="kpis"></div>
+
+<!-- RISKS & RECS -->
+<div class="rp" id="rp">
+  <div class="rp-title" id="rp-title">📊 Risk Assessment &amp; Recommendations</div>
+  <div id="rp-body"></div>
+</div>
+
+<!-- CHARTS -->
+<div class="panel">
+  <div class="cblock">
+    <div class="ctitle">Total net worth by age — liquid + retirement accounts + real estate equity</div>
+    <div class="legend">
+      <div class="li"><div class="ld" style="background:#378ADD"></div>Liquid portfolio</div>
+      <div class="li"><div class="ld" style="background:#1D9E75"></div>Retirement accounts</div>
+      <div class="li"><div class="ld" style="background:#7F77DD"></div>Real estate equity</div>
+      <div class="li"><div class="ld" style="background:#dde8f5;border:1px solid #aaa"></div>Recession year</div>
+    </div>
+    <div style="position:relative;height:280px"><canvas id="ch1"></canvas></div>
+  </div>
+  <div class="cblock">
+    <div class="ctitle">Annual income by source ($K / year)</div>
+    <div class="legend">
+      <div class="li"><div class="ld" style="background:#378ADD"></div>Salary</div>
+      <div class="li"><div class="ld" style="background:#85B7EB"></div>RSU (post-tax)</div>
+      <div class="li"><div class="ld" style="background:#1D9E75"></div>Partner income</div>
+      <div class="li"><div class="ld" style="background:#5DCAA5"></div>401K/403b draws</div>
+      <div class="li"><div class="ld" style="background:#7F77DD"></div>Rental net</div>
+      <div class="li"><div class="ld" style="background:#AFA9EC"></div>Dividends</div>
+      <div class="li"><div class="ld" style="background:#639922"></div>Social Security</div>
+      <div class="li"><div class="ld" style="background:#EF9F27"></div>Deferred comp</div>
+    </div>
+    <div style="position:relative;height:280px"><canvas id="ch2"></canvas></div>
+  </div>
+  <div class="cblock">
+    <div class="ctitle">Annual costs — living expenses + mortgage + taxes + healthcare ($K / year)</div>
+    <div class="legend">
+      <div class="li"><div class="ld" style="background:#E24B4A"></div>Living expenses (inflation-adjusted)</div>
+      <div class="li"><div class="ld" style="background:#3a5a8a"></div>Mortgage (fixed nominal → FREE at payoff age)</div>
+      <div class="li"><div class="ld" style="background:#BA7517"></div>Taxes</div>
+      <div class="li"><div class="ld" style="background:#D85A30"></div>Healthcare</div>
+    </div>
+    <div style="position:relative;height:280px"><canvas id="ch3"></canvas></div>
+  </div>
+  <div class="cblock">
+    <div class="ctitle">Liquid portfolio health — green &gt; $500K · amber &gt; $200K · red = danger zone</div>
+    <div style="position:relative;height:220px"><canvas id="ch4"></canvas></div>
+  </div>
+  <div class="cblock">
+    <div class="ctitle">Annual net cash flow — green = surplus · red = deficit (drawing from portfolio)</div>
+    <div style="position:relative;height:200px"><canvas id="ch5"></canvas></div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="tbl-panel">
+  <div class="ptitle" style="cursor:default;margin-bottom:12px;">📋 Year-by-year detail <span class="pnote">— all values $K · red row = recession · yellow = RE backstop used</span></div>
+
+  <div style="margin-bottom:8px;font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;">Quick views</div>
+  <div class="view-row" id="vrow">
+    <button class="vbtn on" onclick="setView('summary',this)">📊 Summary</button>
+    <button class="vbtn" onclick="setView('income',this)">💵 Income</button>
+    <button class="vbtn" onclick="setView('costs',this)">📉 Costs</button>
+    <button class="vbtn" onclick="setView('wealth',this)">🏠 Wealth</button>
+    <button class="vbtn" onclick="setView('all',this)">🔍 All columns</button>
+  </div>
+
+  <div style="margin-bottom:8px;font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;">Toggle columns</div>
+  <div class="tog-row" id="togrow"></div>
+
+  <div style="overflow-x:auto;margin-top:8px;">
+    <table><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table>
+  </div>
+</div>
+
+<div class="foot">
+  <strong>Model notes:</strong>
+  Monthly expenses = total including mortgage — split automatically (mortgage fixed nominal, living costs inflation-adjusted). ·
+  RSU shares are post-tax — no additional tax. ·
+  Salary &amp; partner income grow 2%/yr pre-retirement. ·
+  401K drawn at 5%/yr from access age, increasing after 70. ·
+  Deferred comp accrues pre-retirement, paid net of tax at elected age. ·
+  Healthcare: employer plan until partner retires, ACA to 65, Medicare 65+. ·
+  If liquid hits zero, rental equity tapped automatically (75¢/dollar). ·
+  Planning tool only — consult a licensed financial advisor.
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  Generic Bay Area engineer defaults (for reset)
+// ─────────────────────────────────────────────
+var GENERIC = {
+  i_your_age:45, i_ret_age:60, i_wife_age:43, i_wife_ret_age:62,
+  i_k401_age:60, i_ss_age:67, i_mort_age:70, i_mort_mo:5000,
+  i_salary:250000, i_bonus:25000, i_rsu_sh:500, i_rsu_px:200,
+  i_wife_sal:150000, i_rental:500, i_div:5000, i_ss:36000,
+  i_liq:500000, i_ret:400000, i_wret:200000, i_re:800000,
+  i_dc_rate:0, i_dc_age:62, i_dc_tax:40,
+  i_exp:12000, i_wsave:10, i_hca:800, i_hmed:500,
+  i_ftax:32, i_stax:9.3, i_ktax:24, i_wtax:24
+};
+
+function resetToGeneric() {
+  Object.keys(GENERIC).forEach(function(k) {
+    var el = document.getElementById(k);
+    if (el) el.value = GENERIC[k];
+  });
+  go();
+}
+
+function tog(bid, cid) {
+  var b = document.getElementById(bid), c = document.getElementById(cid);
+  if (b.classList.contains('hidden')) { b.classList.remove('hidden'); c.textContent = '▼'; }
+  else { b.classList.add('hidden'); c.textContent = '▶'; }
+}
+
+function nv(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+function getP() {
+  return {
+    ya: nv('i_your_age'), ra: nv('i_ret_age'), wra: nv('i_wife_ret_age'),
+    ka: nv('i_k401_age'), ssa: nv('i_ss_age'), ma: nv('i_mort_age'), mmo: nv('i_mort_mo'),
+    sal: nv('i_salary') + nv('i_bonus'), rsh: nv('i_rsu_sh'), rpx: nv('i_rsu_px'),
+    wsal: nv('i_wife_sal'), ren: nv('i_rental'), div: nv('i_div'), ss: nv('i_ss'),
+    liq: nv('i_liq'), ret: nv('i_ret'), wret: nv('i_wret'), re: nv('i_re'),
+    dcr: nv('i_dc_rate') / 100, dca: nv('i_dc_age'), dct: nv('i_dc_tax') / 100,
+    exp: nv('i_exp'), wsv: nv('i_wsave') / 100, hca: nv('i_hca'), hmd: nv('i_hmed'),
+    ft: nv('i_ftax') / 100, st: nv('i_stax') / 100, kt: nv('i_ktax') / 100, wt: nv('i_wtax') / 100,
+    corr: parseFloat(document.getElementById('sl1').value) / 100,
+    inf: parseFloat(document.getElementById('sl2').value) / 100,
+    grw: parseFloat(document.getElementById('sl3').value) / 100,
+    rf: parseFloat(document.getElementById('sl5').value),
+    reg: parseFloat(document.getElementById('sl6').value) / 100,
+    rng: parseFloat(document.getElementById('sl7').value) / 100
+  };
+}
+
+function phase(age, P) {
+  if (age < P.ra) return 'Accumulation';
+  if (age < P.wra) return 'Bridge';
+  if (age < P.ka) return 'Gap';
+  if (age < 65) return 'Pre-Medicare';
+  if (age < P.ssa) return 'Pre-SS';
+  if (age < P.ma) return 'Pre-payoff';
+  return 'Legacy';
+}
+
+// ─────────────────────────────────────────────
+//  COMPUTE — one row per year
+// ─────────────────────────────────────────────
+function compute(P) {
+  var liq = P.liq, ret = P.ret, wret = P.wret, re = P.re, def = 0;
+  var sinceRec = 0, corrLeft = 0, reTapped = 0;
+  var rows = [], endAge = Math.max(90, P.ra + 35);
+  var SG = 0.02;
+
+  for (var age = P.ya; age <= endAge; age++) {
+    var yr  = age - P.ya;
+    var ia  = Math.pow(1 + P.inf, yr);
+    var ra  = Math.pow(1 + P.rng, yr);
+    var da  = Math.pow(0.985, yr);
+    var sg  = Math.pow(1 + SG, yr);
+
+    // Market return
+    sinceRec++;
+    var mkt = P.grw, isC = false;
+    if (corrLeft > 0)          { mkt = -P.corr / 2; corrLeft--; isC = true; }
+    else if (sinceRec >= P.rf) { mkt = -P.corr; corrLeft = 1; sinceRec = 0; isC = true; }
+    var reR = isC ? P.reg * 0.3 : P.reg;
+
+    // Income variables
+    var vSal=0, vRsu=0, vWife=0, vK4=0, vSS=0, vRen=0, vDiv=0, vDcp=0, vReTap=0;
+    // Cost variables
+    var vExp=0, vMort=0, vTax=0, vHc=0;
+
+    // Passive income (always)
+    vDiv = P.div * ia;
+    vRen = P.ren * 12 * ra;
+
+    // Active income
+    if (age < P.ra) {
+      vSal  = P.sal * sg;
+      vRsu  = P.rsh * P.rpx;                 // post-tax, no deduction
+      vWife = P.wsal * sg;
+      def  += P.sal * P.dcr;
+      vTax  = vSal * (P.ft + P.st) + vWife * P.wt;
+    } else if (age < P.wra) {
+      vWife = P.wsal * Math.pow(1 + SG, P.ra - P.ya); // frozen at retirement yr
+      vTax  = vWife * P.wt;
+    }
+
+    // Social Security
+    if (age >= P.ssa) {
+      vSS   = P.ss * ia * da * 0.85;
+      vTax += vSS * 0.15;
+    }
+
+    // 401K draws
+    if (age >= P.ka) {
+      var dr  = 0.05 + Math.max(0, (age - 70) * 0.005);
+      var tot = ret + wret;
+      if (tot > 0) {
+        var k4g  = tot * dr;
+        vK4      = k4g * (1 - P.kt);
+        var rs   = ret / tot;
+        ret      = Math.max(0, ret  - k4g * rs);
+        wret     = Math.max(0, wret - k4g * (1 - rs));
+        vTax    += k4g * P.kt;
+      }
+    }
+
+    // Deferred comp payout
+    if (age === P.dca && def > 0) {
+      vDcp = def * (1 - P.dct);
+      def  = 0;
+    }
+
+    // Expenses: split total input into living (inflation-adj) + fixed mortgage
+    var livBase = Math.max(0, P.exp - P.mmo);
+    vExp  = livBase * 12 * ia;
+    vMort = (age < P.ma) ? P.mmo * 12 : 0;
+
+    // Healthcare
+    if (age >= 65)        { vHc = P.hmd * 12 * ia * 2; }
+    else if (age >= P.wra){ vHc = P.hca * 12 * ia * 2; }
+    else if (age >= P.ra) { vHc = P.hca * 12 * ia * 1; }
+
+    var totalIn  = vSal + vRsu + vWife + vK4 + vSS + vRen + vDiv + vDcp;
+    var totalOut = vExp + vMort + vTax + vHc;
+    var netFlow  = totalIn - totalOut;
+
+    // Portfolio growth
+    var ig = liq * mkt;
+    liq    = liq * (1 + mkt);
+
+    // Update liquid by phase
+    if (age < P.ra) {
+      var salNet  = vSal * (1 - P.ft - P.st);
+      var wifeNet = vWife * (1 - P.wt);
+      liq += salNet + wifeNet + vRsu + vRen + vDiv - vExp - vMort - vHc;
+      ret  += Math.min(69000, P.sal * 0.15);
+      wret += P.wsal * P.wsv;
+    } else if (age < P.wra) {
+      var wifeNet2 = vWife * (1 - P.wt);
+      liq += wifeNet2 + vRen + vDiv + vK4 + vSS + vDcp - vExp - vMort - vHc;
+      wret += P.wsal * P.wsv;
+    } else {
+      liq += vRen + vDiv + vK4 + vSS + vDcp - vExp - vMort - vHc;
+    }
+
+    // RE backstop
+    if (liq < 0 && re > 0) {
+      var need   = -liq;
+      var reDraw = Math.min(re * 0.75, need);
+      liq       += reDraw;
+      re        -= reDraw / 0.75;
+      vReTap     = reDraw;
+      reTapped  += reDraw;
+    }
+    liq = Math.max(0, liq);
+
+    // Compound
+    ret  = Math.max(0, ret  * (1 + mkt * 1.05));
+    wret = Math.max(0, wret * (1 + mkt * 1.02));
+    re  *= (1 + reR);
+
+    rows.push({
+      age: age, ph: phase(age, P), isC: isC,
+      sal:  Math.round(vSal  / 1000),
+      rsu:  Math.round(vRsu  / 1000),
+      wife: Math.round(vWife / 1000),
+      k4:   Math.round(vK4   / 1000),
+      ss:   Math.round(vSS   / 1000),
+      ren:  Math.round(vRen  / 1000),
+      div:  Math.round(vDiv  / 1000),
+      dcp:  Math.round(vDcp  / 1000),
+      ret2: vReTap,
+      tin:  Math.round(totalIn  / 1000),
+      exp:  Math.round(vExp  / 1000),
+      mort: Math.round(vMort / 1000),
+      tax:  Math.round(vTax  / 1000),
+      hc:   Math.round(vHc   / 1000),
+      tout: Math.round(totalOut / 1000),
+      net:  Math.round(netFlow  / 1000),
+      ig:   Math.round(ig / 1000),
+      liqV: liq,
+      liqM: Math.round(liq / 1e5) / 10,
+      retM: Math.round((ret + wret) / 1e5) / 10,
+      reM:  Math.round(re  / 1e5) / 10,
+      nw:   Math.round((liq + ret + wret + re) / 1e5) / 10,
+      reTot: Math.round(reTapped / 1000)
+    });
+  }
+  return rows;
+}
+
+// ─────────────────────────────────────────────
+//  Formatters
+// ─────────────────────────────────────────────
+function fK(v)  { return v === 0 ? '<span class="tm">—</span>' : '$' + Math.abs(v) + 'K'; }
+function fM(v)  { return '$' + Math.abs(v).toFixed(1) + 'M'; }
+function fNW(v) { return v >= 1 ? '$' + v.toFixed(1) + 'M' : '$' + Math.round(v * 1000) + 'K'; }
+function mF(v)  { return Math.abs(v) >= 1 ? '$' + v.toFixed(1) + 'M' : '$' + Math.round(v * 1000) + 'K'; }
+
+// ─────────────────────────────────────────────
+//  Chart helper
+// ─────────────────────────────────────────────
+var CC = {};
+function mkChart(id, type, datasets, stacked, yFmt) {
+  if (CC[id]) CC[id].destroy();
+  CC[id] = new Chart(document.getElementById(id), {
+    type: type,
+    data: { labels: window._ages, datasets: datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: { duration: 200 },
+      plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+      scales: {
+        x: { stacked: !!stacked, ticks: { maxTicksLimit: 11, font: { size: 11 }, color: '#999' }, grid: { display: false } },
+        y: { stacked: !!stacked, ticks: { font: { size: 11 }, color: '#999', callback: yFmt || function(v) { return '$' + v + 'K'; } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+//  Column toggle table
+// ─────────────────────────────────────────────
+var COLS = [
+  { id: 'age',  label: 'Age',       g: 'core'   },
+  { id: 'sal',  label: 'Salary',    g: 'income' },
+  { id: 'rsu',  label: 'RSU',       g: 'income' },
+  { id: 'wife', label: 'Partner',   g: 'income' },
+  { id: 'k4',   label: '401K draw', g: 'income' },
+  { id: 'ren',  label: 'Rental',    g: 'income' },
+  { id: 'div',  label: 'Dividends', g: 'income' },
+  { id: 'ss',   label: 'Soc Sec',   g: 'income' },
+  { id: 'dcp',  label: 'Def comp',  g: 'income' },
+  { id: 'ret2', label: 'RE tap',    g: 'income' },
+  { id: 'tin',  label: 'Total in',  g: 'core'   },
+  { id: 'exp',  label: 'Living',    g: 'costs'  },
+  { id: 'mort', label: 'Mortgage',  g: 'costs'  },
+  { id: 'tax',  label: 'Taxes',     g: 'costs'  },
+  { id: 'hc',   label: 'Healthcare',g: 'costs'  },
+  { id: 'tout', label: 'Total out', g: 'core'   },
+  { id: 'net',  label: 'Net flow',  g: 'core'   },
+  { id: 'liqM', label: 'Liquid NW', g: 'wealth' },
+  { id: 'retM', label: 'Ret accts', g: 'wealth' },
+  { id: 'reM',  label: 'RE equity', g: 'wealth' },
+  { id: 'nw',   label: 'Total NW',  g: 'wealth' }
+];
+var GC = { core: '#7F77DD', income: '#378ADD', costs: '#E24B4A', wealth: '#1D9E75' };
+var VIEWS = {
+  summary: ['age','tin','tout','net','liqM','nw'],
+  income:  ['age','sal','rsu','wife','k4','ren','div','ss','dcp','ret2','tin','net','liqM'],
+  costs:   ['age','exp','mort','tax','hc','tout','net','liqM','nw'],
+  wealth:  ['age','liqM','retM','reM','nw','net']
+};
+var vis = VIEWS.summary.slice();
+
+function buildToggles() {
+  var el = document.getElementById('togrow');
+  if (!el) return;
+  var cm = {};
+  COLS.forEach(function(c) { cm[c.id] = c; });
+  el.innerHTML = COLS.map(function(c) {
+    var on  = vis.indexOf(c.id) >= 0;
+    var col = GC[c.g] || '#888';
+    return '<button class="tbtn' + (on ? ' on' : '') + '" '
+      + 'style="border-color:' + (on ? col : '#ddd') + ';color:' + (on ? col : '#aaa') + '" '
+      + 'onclick="togCol(\'' + c.id + '\',this,\'' + col + '\')">'
+      + (on ? '✓ ' : '') + c.label + '</button>';
+  }).join('');
+}
+
+function togCol(id, btn, col) {
+  var idx = vis.indexOf(id);
+  if (idx >= 0) {
+    if (vis.length <= 2) return;
+    vis.splice(idx, 1);
+    btn.classList.remove('on');
+    btn.style.borderColor = '#ddd'; btn.style.color = '#aaa';
+    btn.innerHTML = btn.innerHTML.replace('✓ ', '');
+  } else {
+    var order = COLS.map(function(c) { return c.id; });
+    vis.push(id);
+    vis.sort(function(a, b) { return order.indexOf(a) - order.indexOf(b); });
+    btn.classList.add('on');
+    btn.style.borderColor = col; btn.style.color = col;
+    btn.innerHTML = '✓ ' + btn.innerHTML;
+  }
+  document.querySelectorAll('.vbtn').forEach(function(b) { b.classList.remove('on'); });
+  if (window._rows) renderTable(window._rows);
+}
+
+function setView(name, btn) {
+  document.querySelectorAll('.vbtn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  vis = (name === 'all' ? COLS.map(function(c) { return c.id; }) : VIEWS[name] || VIEWS.summary).slice();
+  buildToggles();
+  if (window._rows) renderTable(window._rows);
+}
+
+function cellVal(r, id) {
+  switch (id) {
+    case 'age':  return '<td>' + r.age + (r.isC ? '<span class="ptag rtag">↓rec</span>' : r.ret2 > 0 ? '<span class="ptag ytag">⚠RE</span>' : '<span class="ptag">' + r.ph + '</span>') + '</td>';
+    case 'sal':  return '<td>' + (r.sal  ? fK(r.sal)  : '<span class="tm">—</span>') + '</td>';
+    case 'rsu':  return '<td class="cb">' + (r.rsu ? fK(r.rsu) : '<span class="tm">—</span>') + '</td>';
+    case 'wife': return '<td>' + (r.wife ? fK(r.wife) : '<span class="tm">—</span>') + '</td>';
+    case 'k4':   return '<td>' + (r.k4   ? fK(r.k4)   : '<span class="tm">—</span>') + '</td>';
+    case 'ren':  return '<td>' + fK(r.ren)  + '</td>';
+    case 'div':  return '<td>' + fK(r.div)  + '</td>';
+    case 'ss':   return '<td>' + (r.ss   ? fK(r.ss)   : '<span class="tm">—</span>') + '</td>';
+    case 'dcp':  return '<td class="' + (r.dcp ? 'ca' : 'tm') + '">' + (r.dcp ? fK(r.dcp) : '—') + '</td>';
+    case 'ret2': return '<td class="' + (r.ret2 > 0 ? 'tw' : '') + '">' + (r.ret2 > 0 ? fK(Math.round(r.ret2/1000)) : '<span class="tm">—</span>') + '</td>';
+    case 'tin':  return '<td class="' + (r.tin > 200 ? 'tp' : 'tw') + '">' + fK(r.tin) + '</td>';
+    case 'exp':  return '<td class="tw">' + fK(r.exp) + '</td>';
+    case 'mort': return '<td class="' + (r.mort > 0 ? 'cb' : 'tp') + '">' + (r.mort > 0 ? fK(r.mort) : '<b style="color:#1D9E75">FREE</b>') + '</td>';
+    case 'tax':  return '<td class="' + (r.tax > 80 ? 'tn' : 'tw') + '">' + fK(r.tax) + '</td>';
+    case 'hc':   return '<td class="' + (r.hc > 20 ? 'tw' : '') + '">' + (r.hc ? fK(r.hc) : '<span class="tm">—</span>') + '</td>';
+    case 'tout': return '<td class="tn">' + fK(r.tout) + '</td>';
+    case 'net':  return '<td class="' + (r.net >= 0 ? 'tp' : 'tn') + '">' + (r.net >= 0 ? '+' : '') + r.net + 'K</td>';
+    case 'liqM': return '<td class="' + (r.liqM > 1 ? 'tp' : r.liqM > 0.3 ? 'tw' : 'tn') + '">' + fNW(r.liqM) + '</td>';
+    case 'retM': return '<td>' + fNW(r.retM) + '</td>';
+    case 'reM':  return '<td>' + fNW(r.reM)  + '</td>';
+    case 'nw':   return '<td class="' + (r.nw > 5 ? 'tp' : r.nw > 1 ? '' : 'tn') + '">' + fM(r.nw) + '</td>';
+    default:     return '<td>—</td>';
+  }
+}
+
+function renderTable(rows) {
+  window._rows = rows;
+  var cm = {}; COLS.forEach(function(c) { cm[c.id] = c; });
+  document.getElementById('thead').innerHTML = vis.map(function(id) {
+    var c = cm[id], col = GC[c ? c.g : 'core'] || '#555';
+    var st = id === 'age' ? 'text-align:left;min-width:100px;' : '';
+    return '<th style="' + st + 'color:' + col + '">' + (c ? c.label : id) + '</th>';
+  }).join('');
+  document.getElementById('tbody').innerHTML = rows.map(function(r) {
+    var rc = r.isC ? 'rec' : r.ret2 > 0 ? 'war' : '';
+    return '<tr class="' + rc + '">' + vis.map(function(id) { return cellVal(r, id); }).join('') + '</tr>';
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+//  Dynamic risks & recommendations
+// ─────────────────────────────────────────────
+function buildRisksRecs(P, rows, zeroAge, lowAge, maxDef, maxDefAge, reTotal, rr, r70) {
+  var scen      = window._scen || 'base';
+  var scenNames = { base:'Base case', bull:'Bull market', bear:'Bear/recession', stag:'Stagflation', c10:'10% correction', c30:'30% crash' };
+  var sname     = scenNames[scen] || 'Current scenario';
+  var inf       = parseFloat(document.getElementById('sl2').value);
+  var grw       = parseFloat(document.getElementById('sl3').value);
+  var corr      = parseFloat(document.getElementById('sl1').value);
+  var realRet   = grw - inf;
+  var bridgeYrs = P.ka - P.ra;
+  var ytr       = P.ra - P.ya;
+  var rsuVal    = P.rsh * P.rpx * ytr;
+  var bridgeDef = rows.filter(function(r) { return r.age >= P.ra && r.age < P.ka; })
+                      .reduce(function(s, r) { return s + Math.abs(Math.min(0, r.net * 1000)); }, 0);
+  var isStressed = zeroAge !== null || lowAge !== null;
+  var isSevere   = zeroAge !== null && zeroAge < 80;
+
+  // ── Risks ──
+  var risks = [];
+
+  if (bridgeYrs > 0) {
+    var sev = bridgeDef > 500000 ? 'high' : bridgeDef > 150000 ? 'med' : 'low';
+    risks.push({ sev: sev,
+      title: 'Bridge gap — age ' + P.ra + ' to ' + P.ka + ' (' + bridgeYrs + ' yrs without 401K)',
+      body: 'Under <b>' + sname + '</b>, total bridge deficit is <b>$' + Math.round(bridgeDef/1000) + 'K</b>. '
+          + (sev==='high' ? 'This is the primary driver of liquidity stress — must be addressed before retiring.'
+             : sev==='med' ? 'Requires ~$' + Math.round(bridgeDef/1000/bridgeYrs) + 'K/yr average draw from liquid portfolio.'
+             : 'Liquid portfolio can absorb this at current growth rates.') });
+  }
+
+  if (realRet < 2) {
+    risks.push({ sev: realRet < 0 ? 'high' : 'med',
+      title: 'Real return only ' + realRet.toFixed(1) + '% (growth ' + grw + '% − inflation ' + inf + '%)',
+      body: (realRet < 0 ? 'Negative real return — portfolio shrinks in purchasing power every year. Very dangerous over a 30+ year horizon.'
+             : 'At ' + realRet.toFixed(1) + '% real return, your portfolio barely outpaces inflation. Portfolio draws accelerate depletion.') });
+  }
+
+  if (corr >= 25) {
+    risks.push({ sev: corr >= 35 ? 'high' : 'med',
+      title: corr + '% market correction — sequence of returns risk',
+      body: 'A ' + corr + '% crash early in retirement is the most dangerous scenario. Your liquid portfolio drops from ~$' + Math.round(rr.liqM*10)/10 + 'M to ~$' + Math.round(rr.liqM*(1-corr/100)*10)/10 + 'M before 401K or SS kick in.' });
+  }
+
+  if (scen === 'stag') {
+    risks.push({ sev: 'high',
+      title: 'Stagflation — high inflation + low growth is the worst combination',
+      body: 'At ' + inf + '% inflation, your $' + P.exp + '/mo expenses become ~$' + Math.round(P.exp*Math.pow(1+inf/100,15)) + '/mo by age ' + (P.ya+15) + '. Portfolio grows at only ' + grw + '%. Real estate and rental income partially hedge this.' });
+  }
+
+  if (reTotal > 0) {
+    risks.push({ sev: reTotal > 200000 ? 'high' : 'med',
+      title: 'RE backstop triggered — $' + reTotal + 'K of equity tapped',
+      body: 'Liquid assets deplete' + (zeroAge ? ' at age ' + zeroAge : '') + '. Model draws $' + reTotal + 'K from rental/property equity at 75¢ on the dollar. You have the equity, but forced sales are costly.' });
+  }
+
+  if (P.rsh > 0) {
+    risks.push({ sev: scen==='bear'||scen==='c30' ? 'high' : 'med',
+      title: 'RSU concentration — ' + P.rsh + ' shares/yr × $' + P.rpx + ' = $' + Math.round(P.rsh*P.rpx/1000) + 'K/yr for ' + ytr + ' more years',
+      body: (scen==='bear'||scen==='c30'
+        ? 'Under <b>' + sname + '</b>, a ' + corr + '% drop costs ~$' + Math.round(rsuVal*corr/100/1000) + 'K in expected RSU value. Diversifying 50-60% of each vest is critical in this scenario.'
+        : 'Selling 40-50% of each vest into a diversified index reduces single-stock risk while retaining upside participation.') });
+  }
+
+  if (P.ra < 65) {
+    var hcYrs = 65 - P.wra;
+    risks.push({ sev: hcYrs >= 5 ? 'med' : 'low',
+      title: 'Healthcare gap — ACA bridge for ' + hcYrs + ' years (age ' + P.wra + ' to 65)',
+      body: 'Both on ACA from age ' + P.wra + ' to 65 at $' + P.hca + '/mo per person. Total exposure ~$' + Math.round(P.hca*24*hcYrs/1000) + 'K (inflation-adjusted). Medical inflation often runs 5-7%/yr.' });
+  }
+
+  if (scen === 'bull') {
+    risks.push({ sev: 'low',
+      title: 'Bull market — plan looks healthy under this scenario',
+      body: 'At ' + grw + '% growth, real return is a healthy ' + realRet.toFixed(1) + '%. NW at retirement: ' + fM(rr.nw) + '; at age 70: ' + fM(r70.nw) + '. Key risks (concentration, deferred comp tax, healthcare) persist regardless of market.' });
+  }
+
+  // ── Recommendations ──
+  var recs = [];
+
+  if (isSevere) {
+    recs.push({ p: '🔴 Critical', t: 'Retire at ' + (P.ra+2) + ' instead of ' + P.ra,
+      b: '2 extra years adds ~$' + Math.round((P.sal*0.25+P.rsh*P.rpx)*2/1000) + 'K in savings and removes 2 years from the bridge gap (~$' + Math.round(bridgeDef/bridgeYrs/1000*2) + 'K saved). Single most impactful lever.' });
+    recs.push({ p: '🔴 Critical', t: 'Part-time / consulting $60-80K/yr from ' + P.ra + ' to ' + P.ka,
+      b: 'Covers the bridge gap without drawing down the portfolio during the most vulnerable ' + bridgeYrs + '-year window. $70K/yr × ' + bridgeYrs + ' yrs = ~$' + Math.round(70000*bridgeYrs*0.75/1000) + 'K after tax.' });
+  }
+
+  if (P.ra >= 55 && P.ra <= 59) {
+    recs.push({ p: isStressed ? '🔴 Critical' : '🟡 Important', t: 'Rule of 55 — draw 401K penalty-free at age ' + P.ra,
+      b: 'Leaving employer at ' + P.ra + ' may qualify you for penalty-free 401K draws under Rule of 55. Your accounts (~$' + fNW(rr.retM) + ' at retirement) at 5% = ~$' + Math.round((P.ret+P.wret)*0.05*(1-P.kt)/1000) + 'K/yr net.' });
+  }
+
+  if (P.dcr > 0) {
+    recs.push({ p: '🟡 Important', t: 'Spread deferred comp payout over 5-10 years (not lump sum)',
+      b: '~$' + Math.round(P.sal*P.dcr*ytr/1000) + 'K accrued. Lump sum payout = ~' + Math.round(P.dct*100) + '% tax hit. Spreading over 5-10 years starting at age ' + P.dca + ' could save $' + Math.round(P.sal*P.dcr*ytr*0.15/1000) + 'K+ in taxes.' });
+  }
+
+  recs.push({ p: scen==='bear'||scen==='c30' ? '🔴 Critical' : '🟡 Important',
+    t: (scen==='bear'||scen==='c30' ? 'Diversify 60-70%' : 'Diversify 40-50%') + ' of RSU vests into index funds',
+    b: scen==='bear'||scen==='c30'
+      ? 'Under <b>' + sname + '</b>, single-stock concentration is your biggest risk. Selling into VTI/VTSAX at each vest locks in gains and reduces a potential $' + Math.round(rsuVal*corr/100/1000) + 'K loss.'
+      : 'Sell 40-50% of each vest into a total market ETF. Reduces concentration, adds ~$' + Math.round(P.rsh*P.rpx*0.45*0.015/1000) + 'K/yr dividend income, improves long-term stability.' });
+
+  if (scen === 'stag') {
+    recs.push({ p: '🟡 Important', t: 'Inflation hedge: shift 15-20% of portfolio to TIPS / REITs / commodities',
+      b: 'Stagflation erodes cash and bond value rapidly. TIPS preserve purchasing power; REITs grow with inflation; commodity ETFs outperform in inflationary cycles. Your real estate already provides a partial hedge.' });
+  }
+
+  if (scen === 'bull' && !isStressed) {
+    recs.push({ p: '🟢 Opportunity', t: 'Consider retiring earlier or increasing lifestyle spend',
+      b: 'Under bull market conditions, your plan shows strong surplus. NW at 70: ' + fM(r70.nw) + '. You could afford to retire at ' + (P.ra-1) + ' or add $1,500-2,500/mo to travel/experiences without material risk.' });
+  }
+
+  recs.push({ p: '🟢 Proactive', t: 'Pre-arrange HELOC on primary residence before retiring',
+    b: 'Arrange a $300-500K HELOC while employed (income verification easier). Costs nothing until drawn. Provides a liquidity backstop during the bridge period and healthcare gap years at near-zero cost.' });
+
+  if (scen === 'bear' || scen === 'c30') {
+    recs.push({ p: '🔴 Critical', t: 'Hold 2 years of expenses in cash / short-term T-bills before retiring',
+      b: 'Under <b>' + sname + '</b>, a crash at retirement is permanently damaging. Keep ~$' + Math.round(P.exp*24/1000) + 'K liquid in cash so you never sell equities at a loss during recovery years.' });
+  }
+
+  // Sort by priority
+  var order = {'🔴 Critical':0,'🟡 Important':1,'🟢 Opportunity':2,'🟢 Proactive':3};
+  recs.sort(function(a,b) { return (order[a.p]||9) - (order[b.p]||9); });
+
+  // ── Render ──
+  var sevColors = { high:'#E24B4A', med:'#BA7517', low:'#1D9E75' };
+  var sevBg     = { high:'#fff2f2', med:'#fffbf0', low:'#f0faf5'  };
+  var sevBd     = { high:'#fcc',    med:'#f5d580', low:'#b8e0cc'  };
+  var pColors   = { '🔴 Critical':'#A32D2D','🟡 Important':'#BA7517','🟢 Opportunity':'#1D9E75','🟢 Proactive':'#1D9E75' };
+
+  document.getElementById('rp-title').innerHTML = '📊 Risk Assessment &amp; Recommendations — <span style="color:#378ADD">' + sname + '</span>';
+
+  document.getElementById('rp-body').innerHTML =
+    '<div style="font-size:11px;font-weight:700;color:#555;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #f0f0ee;">Risks</div>'
+    + risks.map(function(r) {
+        return '<div class="risk-item" style="background:' + (sevBg[r.sev]||'#fafaf8') + ';border:1px solid ' + (sevBd[r.sev]||'#eee') + '">'
+          + '<div class="risk-title" style="color:' + (sevColors[r.sev]||'#555') + '">'
+          + (r.sev==='high'?'🔴':r.sev==='med'?'🟡':'🟢') + ' ' + r.title + '</div>'
+          + '<div class="risk-body">' + r.body + '</div></div>';
+      }).join('')
+    + '<div style="font-size:11px;font-weight:700;color:#555;margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid #f0f0ee;">Recommended Actions</div>'
+    + '<div class="rec-grid">'
+    + recs.map(function(r) {
+        var col = pColors[r.p] || '#555';
+        return '<div class="rec-card" style="border-color:' + col + '40">'
+          + '<div class="rec-pri" style="color:' + col + '">' + r.p + '</div>'
+          + '<div class="rec-title">' + r.t + '</div>'
+          + '<div class="rec-body">' + r.b + '</div></div>';
+      }).join('')
+    + '</div>';
+}
+
+// ─────────────────────────────────────────────
+//  Main go() function
+// ─────────────────────────────────────────────
+function go() {
+  var P    = getP();
+  var rows = compute(P);
+  window._ages = rows.map(function(r) { return 'Age ' + r.age; });
+
+  var retIdx   = Math.max(0, P.ra - P.ya);
+  var lastIdx  = rows.length - 1;
+  var age70Idx = Math.min(70 - P.ya, lastIdx);
+  var rr  = rows[retIdx]   || rows[lastIdx];
+  var r70 = rows[age70Idx] || rows[lastIdx];
+  var rl  = rows[lastIdx];
+
+  // Stress detection
+  var zeroAge=null, lowAge=null, maxDef=0, maxDefAge=0;
+  rows.forEach(function(r) {
+    if (r.liqM < 0.2 && r.liqM > 0 && !lowAge)  lowAge  = r.age;
+    if (r.liqV <= 0  && !zeroAge)                 zeroAge = r.age;
+    var d = Math.abs(Math.min(0, r.net * 1000));
+    if (d > maxDef) { maxDef = d; maxDefAge = r.age; }
+  });
+  var reTotal = rl.reTot;
+
+  // Banners
+  var db = document.getElementById('dban'), wb = document.getElementById('wban');
+  if (zeroAge) {
+    db.classList.add('on'); wb.classList.remove('on');
+    document.getElementById('ditems').innerHTML =
+      '🔴 Liquid portfolio depletes at age <b>' + zeroAge + '</b> — RE backstop activates<br>'
+    + '🔴 Peak deficit: <b>$' + Math.round(maxDef/1000) + 'K/yr ($' + Math.round(maxDef/12000) + 'K/mo)</b> at age ' + maxDefAge + '<br>'
+    + '🔴 Total RE equity needed: <b>$' + reTotal + 'K</b>';
+  } else if (lowAge) {
+    db.classList.remove('on'); wb.classList.add('on');
+    document.getElementById('witems').innerHTML =
+      '⚠️ Liquid NW falls below $200K at age ' + lowAge + ' — thin buffer<br>'
+    + '⚠️ Peak deficit: $' + Math.round(maxDef/1000) + 'K/yr at age ' + maxDefAge;
+  } else {
+    db.classList.remove('on'); wb.classList.remove('on');
+  }
+
+  // KPIs
+  var mortFree = Math.round(P.mmo * 12 / 1000);
+  document.getElementById('kpis').innerHTML = [
+    ['NW at retirement',   fM(rr.nw),    rr.nw  > 3 ? 'cg' : rr.nw  > 1 ? 'cb' : 'ca'],
+    ['Liquid at retirement', fNW(rr.liqM), rr.liqM> 1 ? 'cg' : rr.liqM> 0.3?'ca':'cr'],
+    ['NW at age 70',       fM(r70.nw),   r70.nw > 5 ? 'cg' : r70.nw > 2 ? 'ca' : 'cr'],
+    ['Liquid at age 70',   fNW(r70.liqM),r70.liqM>1 ? 'cg' : r70.liqM>0.3?'ca':'cr'],
+    ['Cash freed at payoff','$'+mortFree+'K/yr','cg'],
+    ['RE backstop used',   reTotal>0?'$'+reTotal+'K':'None', reTotal>300?'cr':reTotal>0?'ca':'cg']
+  ].map(function(x) {
+    return '<div class="kcard"><div class="klbl">' + x[0] + '</div><div class="kval ' + x[2] + '">' + x[1] + '</div></div>';
+  }).join('');
+
+  // Build risks & recs
+  buildRisksRecs(P, rows, zeroAge, lowAge, maxDef, maxDefAge, reTotal, rr, r70);
+
+  // Chart 1 — Net worth stacked
+  mkChart('ch1','bar',[
+    { label:'Liquid',     data:rows.map(function(r){return r.liqM;}), backgroundColor:rows.map(function(r){return r.isC?'#b8d4ed':'#378ADD';}), stack:'n' },
+    { label:'Retirement', data:rows.map(function(r){return r.retM;}), backgroundColor:rows.map(function(r){return r.isC?'#96ccb4':'#1D9E75';}), stack:'n' },
+    { label:'Real estate',data:rows.map(function(r){return r.reM;}),  backgroundColor:rows.map(function(r){return r.isC?'#bfbbe6':'#7F77DD';}), stack:'n' }
+  ], true, mF);
+
+  // Chart 2 — Income
+  mkChart('ch2','bar',[
+    { label:'Salary',    data:rows.map(function(r){return r.sal;}),  backgroundColor:'#378ADD', stack:'i' },
+    { label:'RSU',       data:rows.map(function(r){return r.rsu;}),  backgroundColor:'#85B7EB', stack:'i' },
+    { label:'Partner',   data:rows.map(function(r){return r.wife;}), backgroundColor:'#1D9E75', stack:'i' },
+    { label:'401K',      data:rows.map(function(r){return r.k4;}),   backgroundColor:'#5DCAA5', stack:'i' },
+    { label:'Rental',    data:rows.map(function(r){return r.ren;}),  backgroundColor:'#7F77DD', stack:'i' },
+    { label:'Dividends', data:rows.map(function(r){return r.div;}),  backgroundColor:'#AFA9EC', stack:'i' },
+    { label:'SS',        data:rows.map(function(r){return r.ss;}),   backgroundColor:'#639922', stack:'i' },
+    { label:'Def comp',  data:rows.map(function(r){return r.dcp;}),  backgroundColor:'#EF9F27', stack:'i' }
+  ], true);
+
+  // Chart 3 — Costs
+  mkChart('ch3','bar',[
+    { label:'Living', data:rows.map(function(r){return r.exp;}),  backgroundColor:'#E24B4A', stack:'w' },
+    { label:'Mortgage',data:rows.map(function(r){return r.mort;}),backgroundColor:'#3a5a8a', stack:'w' },
+    { label:'Taxes',  data:rows.map(function(r){return r.tax;}),  backgroundColor:'#BA7517', stack:'w' },
+    { label:'Healthcare',data:rows.map(function(r){return r.hc;}),backgroundColor:'#D85A30', stack:'w' }
+  ], true);
+
+  // Chart 4 — Liquid NW health
+  if (CC.ch4) CC.ch4.destroy();
+  CC.ch4 = new Chart(document.getElementById('ch4'), {
+    type: 'bar',
+    data: { labels: window._ages, datasets: [{
+      label: 'Liquid NW',
+      data: rows.map(function(r) { return r.liqM; }),
+      backgroundColor: rows.map(function(r) { return r.liqM < 0.2 ? '#E24B4A' : r.liqM < 0.5 ? '#EF9F27' : '#378ADD'; })
+    }]},
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:{duration:200},
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(c){return 'Liquid NW: '+mF(c.raw);}}}},
+      scales:{
+        x:{ ticks:{maxTicksLimit:11,font:{size:11},color:'#999'}, grid:{display:false} },
+        y:{ ticks:{font:{size:11},color:'#999',callback:mF}, grid:{color:'rgba(0,0,0,0.05)'} }
+      }
+    }
+  });
+
+  // Chart 5 — Net cash flow
+  if (CC.ch5) CC.ch5.destroy();
+  CC.ch5 = new Chart(document.getElementById('ch5'), {
+    type: 'bar',
+    data: { labels: window._ages, datasets: [{
+      label: 'Net cash flow',
+      data: rows.map(function(r) { return r.net; }),
+      backgroundColor: rows.map(function(r) { return r.net >= 0 ? '#1D9E75' : '#E24B4A'; })
+    }]},
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:{duration:200},
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:function(c){return 'Net: $'+c.raw+'K/yr ($'+Math.round(c.raw/12)+'K/mo)';}} }},
+      scales:{
+        x:{ ticks:{maxTicksLimit:11,font:{size:11},color:'#999'}, grid:{display:false} },
+        y:{ ticks:{font:{size:11},color:'#999',callback:function(v){return (v<0?'-':'')+'$'+Math.abs(v)+'K';}}, grid:{color:'rgba(0,0,0,0.05)'} }
+      }
+    }
+  });
+
+  renderTable(rows);
+  buildToggles();
+}
+
+function applyScen(s, btn) {
+  window._scen = s;
+  document.querySelectorAll('.sbtn').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  var p = {
+    base: [20,3.5,7.0,9,3.5,2.5], bull: [10,3.0,9.0,12,5.0,3.5],
+    bear: [30,4.0,5.0,6,2.0,1.5], stag: [25,6.5,4.5,7,1.5,1.0],
+    c10:  [10,3.5,7.0,9,3.5,2.5], c30:  [30,3.5,7.0,9,3.5,2.5]
+  };
+  var v = p[s];
+  document.getElementById('sl1').value=v[0]; document.getElementById('v1').textContent=v[0]+'%';
+  document.getElementById('sl2').value=v[1]; document.getElementById('v2').textContent=v[1]+'%';
+  document.getElementById('sl3').value=v[2]; document.getElementById('v3').textContent=parseFloat(v[2]).toFixed(1)+'%';
+  document.getElementById('sl5').value=v[3]; document.getElementById('v5').textContent=v[3]+' yrs';
+  document.getElementById('sl6').value=v[4]; document.getElementById('v6').textContent=v[4]+'%';
+  document.getElementById('sl7').value=v[5]; document.getElementById('v7').textContent=v[5]+'%';
+  go();
+}
+
+// Init
+window._scen = 'base';
+go();
+</script>
+</body>
+</html>
